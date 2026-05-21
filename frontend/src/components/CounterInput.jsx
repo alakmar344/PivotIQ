@@ -20,18 +20,18 @@ export function CounterInput({ onSubmit, loading }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-card border border-border rounded-2xl p-4">
+    <form onSubmit={handleSubmit} className="bg-card/80 border border-border rounded-2xl p-4 shadow-card">
       <textarea
         value={counter}
         onChange={(event) => setCounter(event.target.value)}
-        className="w-full h-28 bg-surface border border-border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full h-28 bg-surface/90 border border-border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-primary"
         placeholder="Make your case. Add evidence, correct assumptions, or propose changes..."
       />
       <div className="mt-2 text-sm text-textSecondary">{counter.trim().length} / 2000 (min 10)</div>
       <button
         type="submit"
         disabled={loading || counter.trim().length < 10 || counter.trim().length > 2000}
-        className="mt-3 px-4 py-2 bg-primary hover:bg-primaryHover disabled:opacity-50 rounded-lg"
+        className="mt-3 px-4 py-2 bg-primary hover:bg-primaryHover disabled:opacity-50 rounded-lg shadow-lg shadow-primary/20"
       >
         Counter the AI →
       </button>

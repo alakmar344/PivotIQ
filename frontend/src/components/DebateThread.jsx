@@ -27,10 +27,10 @@ export function DebateThread({ history }) {
   }, [history]);
 
   return (
-    <section className="bg-card border border-border rounded-2xl p-4 max-h-[500px] overflow-y-auto space-y-4">
+    <section className="bg-card/80 border border-border rounded-2xl p-4 max-h-[500px] overflow-y-auto space-y-4 shadow-card">
       {history.map((turn, idx) => (
         <article key={turn.createdAt || idx} className="space-y-2 fade-in">
-          <div className="bg-surface border border-border rounded-xl p-3">
+          <div className="bg-surface/90 border border-border rounded-xl p-3">
             <p className="text-xs text-textSecondary mb-1">You</p>
             <p>{turn.userCounter}</p>
           </div>

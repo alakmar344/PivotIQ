@@ -32,11 +32,11 @@ export function VerdictCard({ verdict, onDisagree, compact = false }) {
   const badgeColor = verdict.verdict === "FEASIBLE" ? "bg-success/20 text-success" : verdict.verdict === "RISKY" ? "bg-warning/20 text-warning" : "bg-danger/20 text-danger";
 
   return (
-    <section className="fade-in bg-card border border-border rounded-2xl p-6 space-y-5">
+    <section className="fade-in bg-card/80 border border-border rounded-2xl p-6 space-y-5 shadow-card">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="text-sm text-textSecondary">Feasibility Score</div>
-          <div className="text-5xl font-bold">{displayScore}</div>
+          <div className="text-5xl font-bold tracking-tight">{displayScore}</div>
         </div>
         <div className={`px-3 py-1 rounded-full text-sm font-semibold ${badgeColor}`}>{verdict.verdict}</div>
       </div>

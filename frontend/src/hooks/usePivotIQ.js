@@ -1,5 +1,8 @@
-import { useReducer } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { api } from "../utils/api";
+
+const HISTORY_STORAGE_KEY = "pivotiq-chat-history-v1";
+const HISTORY_LIMIT = 12;
 
 const initialState = {
   phase: "idle",
@@ -14,6 +17,34 @@ const initialState = {
   sessionId: null,
   agentActivity: null
 };
+
+/**
+ * Reads persisted chat history.
+ * @returns {any[]}
+ */
+function readHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_error) {
+    return [];
+  }
+}
+
+/**
+ * Writes chat history to localStorage.
+ * @param {any[]} sessions
+ * @returns {void}
+ */
+function writeHistory(sessions) {
+  try {
+    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(sessions));
+  } catch (_error) {
+    // Ignore quota/storage failures.
+  }
+}
 
 /**
  * Sanitizes user-entered text.
@@ -81,6 +112,14 @@ function reducer(state, action) {
       return initialState;
     case "START_DEBATE":
       return { ...state, phase: "debating" };
+    case "LOAD_SESSION":
+      return {
+        ...initialState,
+        ...action.payload,
+        loading: false,
+        error: null,
+        agentActivity: null
+      };
     default:
       return state;
   }
@@ -92,6 +131,33 @@ function reducer(state, action) {
  */
 export function usePivotIQ() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [historySessions, setHistorySessions] = useState(() => readHistory());
+
+  const currentSnapshot = useMemo(() => {
+    if (!state.sessionId || !state.idea) return null;
+
+    return {
+      sessionId: state.sessionId,
+      idea: state.idea,
+      phase: state.phase,
+      researchData: state.researchData,
+      verdict: state.verdict,
+      debateHistory: state.debateHistory,
+      plan: state.plan,
+      updatedAt: new Date().toISOString()
+    };
+  }, [state.sessionId, state.idea, state.phase, state.researchData, state.verdict, state.debateHistory, state.plan]);
+
+  useEffect(() => {
+    if (!currentSnapshot || currentSnapshot.phase === "idle") return;
+
+    setHistorySessions((previous) => {
+      const withoutCurrent = previous.filter((session) => session.sessionId !== currentSnapshot.sessionId);
+      const next = [currentSnapshot, ...withoutCurrent].slice(0, HISTORY_LIMIT);
+      writeHistory(next);
+      return next;
+    });
+  }, [currentSnapshot]);
 
   /**
    * Submits startup idea for validation.
@@ -246,5 +312,49 @@ export function usePivotIQ() {
     console.log("[PivotIQ Hook] action complete", { action: "startDebate" });
   }
 
-  return { state, submitIdea, submitCounter, generatePlan, startDebate, reset };
+  /**
+   * Loads a session from local history.
+   * @param {string} sessionId
+   * @returns {void}
+   */
+  function loadSession(sessionId) {
+    const selected = historySessions.find((session) => session.sessionId === sessionId);
+    if (!selected) return;
+    dispatch({ type: "LOAD_SESSION", payload: selected });
+  }
+
+  /**
+   * Deletes a specific local history session.
+   * @param {string} sessionId
+   * @returns {void}
+   */
+  function deleteHistorySession(sessionId) {
+    setHistorySessions((previous) => {
+      const next = previous.filter((session) => session.sessionId !== sessionId);
+      writeHistory(next);
+      return next;
+    });
+  }
+
+  /**
+   * Clears full local history.
+   * @returns {void}
+   */
+  function clearHistory() {
+    setHistorySessions([]);
+    writeHistory([]);
+  }
+
+  return {
+    state,
+    historySessions,
+    submitIdea,
+    submitCounter,
+    generatePlan,
+    startDebate,
+    reset,
+    loadSession,
+    deleteHistorySession,
+    clearHistory
+  };
 }
