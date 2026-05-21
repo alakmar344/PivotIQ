@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -9,7 +8,15 @@ import { apiRateLimiter } from "./middleware/rateLimiter.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { logger } from "./utils/logger.js";
 
-dotenv.config();
+try {
+  const dotenv = await import("dotenv");
+  dotenv.default.config();
+} catch (error) {
+  if (error.code !== "ERR_MODULE_NOT_FOUND") {
+    throw error;
+  }
+  console.warn("dotenv package not found; continuing with host-provided environment variables.");
+}
 
 const app = express();
 const port = Number(process.env.PORT || 3001);
