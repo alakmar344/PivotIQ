@@ -1,24 +1,58 @@
 # PivotIQ
 
-The AI that argues with your idea — so the market doesn't have to.
+**The AI cofounder that pressure-tests your startup idea before the market does.**
 
-PivotIQ is an autonomous multi-agent startup idea validator that researches your market, generates a hard-nosed feasibility verdict, debates your counter-arguments, and produces an actionable execution plan when your thesis survives scrutiny.
+PivotIQ helps founders avoid expensive blind spots by combining live market intelligence, adversarial critique, and an execution blueprint in one premium workflow.  
+Instead of “good idea” fluff, PivotIQ gives you a boardroom-style reality check.
 
-## Tech Stack
+---
 
-- **Frontend:** React 18 + Vite + Tailwind CSS v3
-- **Backend:** Node.js + Express
-- **AI:** Google Gemini 2.5 Flash (`gemini-2.5-flash-preview-05-20`)
-- **Web Search:** Serper API
+## Why PivotIQ matters
 
-## Repository Structure
+Most early-stage ideas fail because founders ship before validating:
+- Real market demand
+- Competitive pressure
+- Execution feasibility
+- Monetization clarity
+
+PivotIQ is built to close that gap fast.  
+You submit your concept once, and the system:
+1. Researches your market and competitors
+2. Produces a feasibility verdict
+3. Debates your counter-arguments
+4. Generates a practical build plan once your thesis survives
+
+This is decision intelligence for founders, not just chat responses.
+
+---
+
+## Product highlights
+
+- **Professional founder dashboard UI** with clear phase-based flow
+- **Multi-agent analysis pipeline** (research, analysis, adversarial challenge, planning)
+- **Evidence-backed verdicting** with score, confidence, pros/cons, key risk, and key strength
+- **Debate mode** to challenge assumptions with your own market logic
+- **Local chat history** persisted in browser localStorage so past sessions can be reopened
+- **Plan export** as markdown for immediate execution
+
+---
+
+## Tech stack
+
+- **Frontend:** React 18, Vite, Tailwind CSS
+- **Backend:** Node.js, Express
+- **AI Engine:** Google Gemini (`gemini-2.5-flash-preview-05-20`)
+- **Web intelligence:** Serper API
+
+---
+
+## Repository structure
 
 ```text
-pivotiq/
+PivotIQ/
 ├── backend/
 │   ├── server.js
 │   ├── .env.example
-│   ├── package.json
 │   ├── routes/
 │   │   ├── validate.js
 │   │   ├── counter.js
@@ -32,215 +66,138 @@ pivotiq/
 │   │   ├── gemini.js
 │   │   └── serper.js
 │   ├── middleware/
-│   │   ├── errorHandler.js
-│   │   ├── rateLimiter.js
-│   │   └── validator.js
 │   └── utils/
-│       └── logger.js
-├── frontend/
-│   ├── index.html
-│   ├── vite.config.js
-│   ├── package.json
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   └── src/
-│       ├── main.jsx
-│       ├── App.jsx
-│       ├── index.css
-│       ├── components/
-│       │   ├── IdeaInput.jsx
-│       │   ├── VerdictCard.jsx
-│       │   ├── DebateThread.jsx
-│       │   ├── CounterInput.jsx
-│       │   ├── BuildPlan.jsx
-│       │   ├── LoadingAgent.jsx
-│       │   ├── ResearchSources.jsx
-│       │   └── ErrorBoundary.jsx
-│       ├── hooks/
-│       │   └── usePivotIQ.js
-│       └── utils/
-│           └── api.js
-└── README.md
+└── frontend/
+    ├── src/
+    │   ├── App.jsx
+    │   ├── hooks/usePivotIQ.js
+    │   ├── components/
+    │   └── utils/api.js
 ```
 
-## Setup
+---
 
-### 1) Clone
+## Quick start
+
+### 1) Clone and install
 
 ```bash
 git clone https://github.com/alakmar344/PivotIQ.git
 cd PivotIQ
 ```
 
-### 2) Backend install and env
+Backend dependencies:
 
 ```bash
 cd backend
-cp .env.example .env
 npm install
+cp .env.example .env
 ```
 
-Update `.env` values for your API keys.
-
-### 3) Frontend install
+Frontend dependencies:
 
 ```bash
 cd ../frontend
 npm install
 ```
 
-### 4) Run development servers
+---
 
-Terminal 1:
+## Environment configuration
+
+Update `backend/.env` with:
+
+| Variable | Required | Description |
+|---|---|---|
+| `NODE_ENV` | Yes | Runtime mode (`development` / `production`) |
+| `PORT` | Yes | Backend port (example `3001`) |
+| `GEMINI_API_KEY` | Yes | Gemini API key |
+| `SERPER_API_KEY` | Yes | Serper API key |
+| `FRONTEND_URL` | Yes | Allowed frontend origin for CORS |
+| `LOG_LEVEL` | No | Logger verbosity |
+
+Frontend environment:
+
+| Variable | Required | Description |
+|---|---|---|
+| `VITE_API_URL` | Yes | Backend base URL |
+
+---
+
+## Run locally
+
+Start backend:
 
 ```bash
 cd backend
 npm run dev
 ```
 
-Terminal 2:
+Start frontend in another terminal:
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-Frontend runs at `http://localhost:5173` and backend at `http://localhost:3001`.
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:3001`
 
-## Environment Variables
+---
 
-| Variable | Required | Example | Description |
-|---|---|---|---|
-| `NODE_ENV` | Yes | `development` | Runtime mode |
-| `PORT` | Yes | `3001` | Backend server port |
-| `GEMINI_API_KEY` | Yes | `AIza...` | Google Gemini API key |
-| `SERPER_API_KEY` | Yes | `abc123...` | Serper API key |
-| `FRONTEND_URL` | Yes | `http://localhost:5173` | Allowed CORS origin |
-| `LOG_LEVEL` | No | `info` | Logger threshold |
-| `VITE_API_URL` | Yes (frontend) | `http://localhost:3001` | Backend API base URL |
-
-## API Documentation
+## API overview
 
 ### `POST /api/validate`
-
-Validates a startup idea.
-
-**Request body**
-
-```json
-{ "idea": "An AI tutor for JEE students in Hindi with adaptive practice tests" }
-```
-
-**Response**
-
-```json
-{
-  "researchData": {},
-  "verdict": {},
-  "sessionId": "uuid"
-}
-```
+Submit a startup idea and get research + first verdict.
 
 ### `POST /api/counter`
-
-Submits a counter-argument in debate mode.
-
-**Request body**
-
-```json
-{
-  "sessionId": "uuid",
-  "idea": "...",
-  "researchData": {},
-  "currentVerdict": {},
-  "debateHistory": [],
-  "userCounter": "Your assumptions ignore district-level school adoption data."
-}
-```
-
-**Response**
-
-```json
-{
-  "agentResponse": "...",
-  "updatedVerdict": {},
-  "verdictChanged": true,
-  "planReady": false,
-  "responseType": "verdict_updated",
-  "changeReason": "..."
-}
-```
+Challenge the verdict with your argument and continue debate turns.
 
 ### `POST /api/plan`
+Generate a build plan once the idea is ready for execution.
 
-Generates an execution plan after feasibility threshold is met.
+---
 
-**Request body**
+## Founder workflow
 
-```json
-{
-  "sessionId": "uuid",
-  "idea": "...",
-  "researchData": {},
-  "finalVerdict": {},
-  "debateHistory": []
-}
-```
+1. Describe idea in detail
+2. Review feasibility verdict
+3. Enter debate mode and defend your thesis
+4. Let PivotIQ refine verdict confidence
+5. Generate and export your execution plan
+6. Reopen prior sessions from local chat history
 
-**Response**
+---
 
-```json
-{ "plan": {} }
-```
+## Security and production readiness
 
-## Architecture Diagram (ASCII)
+- Helmet headers
+- CORS restrictions
+- Rate limiting
+- Input validation
+- Global error handling
+- Request timeout handling
+- Retry logic for upstream AI calls
+- Frontend error boundary
 
-```text
-┌─────────────┐        HTTP         ┌────────────────┐
-│ React UI    │ ─────────────────▶ │ Express API     │
-│ (Vite)      │ ◀───────────────── │ /validate       │
-└─────┬───────┘                     │ /counter        │
-      │                             │ /plan           │
-      │                             └──────┬──────────┘
-      │                                    │
-      │                       ┌────────────▼────────────┐
-      │                       │ Agent Orchestration      │
-      │                       │ Research/Analysis/       │
-      │                       │ Adversarial/Plan         │
-      │                       └──────┬──────────┬────────┘
-      │                              │          │
-      │                     ┌────────▼───┐   ┌──▼─────────┐
-      │                     │ Gemini API │   │ Serper API │
-      │                     └────────────┘   └────────────┘
-```
+---
 
-## Get API Keys
-
-- Gemini API key: https://ai.google.dev/
-- Serper API key: https://serper.dev/
-
-## Deployment Guide
+## Deployment
 
 ### Frontend (Vercel)
-1. Import `frontend` directory into Vercel.
-2. Set `VITE_API_URL` to your backend public URL.
-3. Deploy.
+1. Import `frontend/`
+2. Set `VITE_API_URL`
+3. Deploy
 
-### Backend (Railway/Render)
-1. Import `backend` directory.
-2. Set environment variables from `.env.example`.
-3. Start command: `npm start`.
-4. Ensure CORS `FRONTEND_URL` matches deployed frontend domain.
+### Backend (Render/Railway)
+1. Import `backend/`
+2. Set environment variables from `.env.example`
+3. Start command: `npm start`
+4. Ensure `FRONTEND_URL` matches deployed frontend domain
 
-## Production Hardening Included
+---
 
-- Helmet security headers
-- CORS restricted to frontend origin
-- Express rate limiting (`30 requests / 15 min`)
-- JSON body size limit (`50kb`)
-- Global error handling with production-safe responses
-- Request timeout handling (30s)
-- Graceful shutdown and process-level exception handlers
-- Serper in-memory cache (10 minutes)
-- Gemini retry logic with exponential backoff
-- React Error Boundary and robust async error handling
+## Positioning statement
+
+PivotIQ is for serious founders who want to de-risk decisions fast.  
+If you need sharper market truth, stronger strategic clarity, and faster execution confidence, PivotIQ is your validation engine.

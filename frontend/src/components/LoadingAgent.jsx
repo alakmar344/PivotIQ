@@ -22,9 +22,9 @@ export function LoadingAgent({ agentActivity }) {
   }, []);
 
   return (
-    <div className="fade-in bg-card border border-border rounded-2xl p-8 flex flex-col items-center gap-4">
+    <div className="fade-in bg-card/80 border border-border rounded-2xl p-8 flex flex-col items-center gap-4 shadow-card">
       <div className="spinner" />
-      <p className="text-lg font-medium">{agentActivity || "Working..."}</p>
+      <p className="text-lg font-medium text-center">{agentActivity || "Working..."}</p>
       <p className="text-textSecondary">{rotatingMessages[index]}</p>
       <div className="pulse-dots text-primary text-xl"><span>.</span><span>.</span><span>.</span></div>
     </div>

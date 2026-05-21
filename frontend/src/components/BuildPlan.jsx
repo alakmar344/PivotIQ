@@ -31,12 +31,12 @@ export function BuildPlan({ plan }) {
 
   return (
     <section className="space-y-5 fade-in">
-      <div className="bg-card border border-border rounded-2xl p-6">
+      <div className="bg-card/80 border border-border rounded-2xl p-6 shadow-card">
         <h2 className="text-3xl font-bold">{plan.projectName}</h2>
         <p className="text-textSecondary mt-2">{plan.oneLiner}</p>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6">
+      <div className="bg-card/80 border border-border rounded-2xl p-6 shadow-card">
         <h3 className="font-semibold mb-2">MVP Scope</h3>
         <span className="inline-block mb-3 text-xs bg-primary/20 text-primary rounded-full px-2 py-1">{plan.mvpScope?.timeline}</span>
         <div className="grid md:grid-cols-2 gap-4 text-sm">
@@ -51,7 +51,7 @@ export function BuildPlan({ plan }) {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6">
+      <div className="bg-card/80 border border-border rounded-2xl p-6 shadow-card">
         <h3 className="font-semibold mb-3">Tech Stack</h3>
         <div className="grid md:grid-cols-3 gap-3 text-sm">
           {Object.entries(plan.techStack || {}).map(([key, value]) => (
@@ -63,7 +63,7 @@ export function BuildPlan({ plan }) {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6">
+      <div className="bg-card/80 border border-border rounded-2xl p-6 shadow-card">
         <h3 className="font-semibold mb-3">Weekly Milestones</h3>
         <div className="grid md:grid-cols-2 gap-3">
           {(plan.weeklyMilestones || []).map((milestone) => (
@@ -78,13 +78,13 @@ export function BuildPlan({ plan }) {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6">
+      <div className="bg-card/80 border border-border rounded-2xl p-6 shadow-card">
         <h3 className="font-semibold mb-3">Monetization Path</h3>
         <p className="text-textSecondary">{plan.monetizationPath?.model} — {plan.monetizationPath?.approach}</p>
         <p className="text-sm mt-2">First Revenue Estimate: {plan.monetizationPath?.firstRevenueEstimate}</p>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6">
+      <div className="bg-card/80 border border-border rounded-2xl p-6 shadow-card">
         <h3 className="font-semibold mb-3">Top Risks</h3>
         <table className="w-full text-sm">
           <thead>
@@ -111,14 +111,14 @@ export function BuildPlan({ plan }) {
         </ol>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6">
+      <div className="bg-card/80 border border-border rounded-2xl p-6 shadow-card">
         <h3 className="font-semibold mb-3">Resources Needed</h3>
         <p className="text-textSecondary">Budget: {plan.resourcesNeeded?.budget}</p>
         <p className="text-textSecondary">Team Size: {plan.resourcesNeeded?.teamSize}</p>
         <p className="text-textSecondary">Skills: {(plan.resourcesNeeded?.keySkills || []).join(", ")}</p>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6">
+      <div className="bg-card/80 border border-border rounded-2xl p-6 shadow-card">
         <h3 className="font-semibold mb-3">Success Metrics</h3>
         <table className="w-full text-sm">
           <thead>

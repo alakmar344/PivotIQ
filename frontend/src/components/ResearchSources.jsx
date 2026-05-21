@@ -25,9 +25,10 @@ export function ResearchSources({ researchData }) {
   if (!researchData) return null;
 
   return (
-    <section className="bg-card border border-border rounded-2xl p-4">
-      <button type="button" onClick={() => setOpen((prev) => !prev)} className="w-full text-left font-medium">
-        Research Sources {open ? "▲" : "▼"}
+    <section className="bg-card/80 border border-border rounded-2xl p-4 shadow-card">
+      <button type="button" onClick={() => setOpen((prev) => !prev)} className="w-full text-left font-medium flex items-center justify-between">
+        <span>Research Sources</span>
+        <span className="text-textSecondary text-sm">{(researchData.sources || []).length} links {open ? "▲" : "▼"}</span>
       </button>
       {open ? (
         <div className="mt-4 space-y-4 text-sm text-textSecondary">
