@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { api } from "../utils/api";
 
 const HISTORY_STORAGE_KEY = "pivotiq-chat-history-v1";
@@ -132,6 +132,7 @@ function reducer(state, action) {
 export function usePivotIQ() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [historySessions, setHistorySessions] = useState(() => readHistory());
+  const lastSnapshotSignatureRef = useRef("");
 
   const currentSnapshot = useMemo(() => {
     if (!state.sessionId || !state.idea) return null;
@@ -148,8 +149,21 @@ export function usePivotIQ() {
     };
   }, [state.sessionId, state.idea, state.phase, state.researchData, state.verdict, state.debateHistory, state.plan]);
 
+  const snapshotSignature = useMemo(() => {
+    if (!currentSnapshot) return "";
+    return JSON.stringify({
+      sessionId: currentSnapshot.sessionId,
+      phase: currentSnapshot.phase,
+      verdict: currentSnapshot.verdict,
+      debateHistory: currentSnapshot.debateHistory,
+      plan: currentSnapshot.plan
+    });
+  }, [currentSnapshot]);
+
   useEffect(() => {
-    if (!currentSnapshot || currentSnapshot.phase === "idle") return;
+    if (!currentSnapshot) return;
+    if (snapshotSignature === lastSnapshotSignatureRef.current) return;
+    lastSnapshotSignatureRef.current = snapshotSignature;
 
     setHistorySessions((previous) => {
       const withoutCurrent = previous.filter((session) => session.sessionId !== currentSnapshot.sessionId);
@@ -157,7 +171,7 @@ export function usePivotIQ() {
       writeHistory(next);
       return next;
     });
-  }, [currentSnapshot]);
+  }, [currentSnapshot, snapshotSignature]);
 
   /**
    * Submits startup idea for validation.
