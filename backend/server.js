@@ -10,7 +10,7 @@ import { logger } from "./utils/logger.js";
 
 try {
   const dotenv = await import("dotenv");
-  dotenv.config();
+  dotenv.default.config();
 } catch (error) {
   if (error?.code !== "ERR_MODULE_NOT_FOUND") {
     throw error;
