@@ -192,8 +192,17 @@ Generate a build plan once the idea is ready for execution.
 ### Backend (Render/Railway)
 1. Import `backend/`
 2. Set environment variables from `.env.example`
-3. Start command: `npm start`
-4. Ensure `FRONTEND_URL` matches deployed frontend domain
+3. Build command: `npm install && npm run build`
+4. Start command: `npm start`
+5. Ensure `FRONTEND_URL` matches deployed frontend domain
+
+For Render, set:
+
+```bash
+Root Directory: backend
+Build Command: npm install && npm run build
+Start Command: npm start
+```
 
 ---
 
