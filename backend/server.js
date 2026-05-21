@@ -12,7 +12,7 @@ try {
   const dotenv = await import("dotenv");
   dotenv.default.config();
 } catch (error) {
-  if (error?.code !== "ERR_MODULE_NOT_FOUND") {
+  if (error.code !== "ERR_MODULE_NOT_FOUND") {
     throw error;
   }
   console.warn("dotenv package not found; continuing with host-provided environment variables.");
