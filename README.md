@@ -2,8 +2,6 @@
 
 The AI that argues with your idea — so the market doesn't have to.
 
-![PivotIQ Demo GIF Placeholder](./docs/demo.gif)
-
 PivotIQ is an autonomous multi-agent startup idea validator that researches your market, generates a hard-nosed feasibility verdict, debates your counter-arguments, and produces an actionable execution plan when your thesis survives scrutiny.
 
 ## Tech Stack

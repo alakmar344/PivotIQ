@@ -6,10 +6,26 @@ import { body, validationResult } from "express-validator";
  * @returns {string}
  */
 export function sanitizeText(value) {
-  return String(value || "")
-    .replace(/<[^>]*>/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  const input = String(value || "");
+  let inTag = false;
+  let out = "";
+
+  for (let i = 0; i < input.length; i += 1) {
+    const char = input[i];
+    if (char === "<") {
+      inTag = true;
+      continue;
+    }
+    if (char === ">") {
+      inTag = false;
+      continue;
+    }
+    if (!inTag) {
+      out += char;
+    }
+  }
+
+  return out.replace(/\s+/g, " ").trim();
 }
 
 /**

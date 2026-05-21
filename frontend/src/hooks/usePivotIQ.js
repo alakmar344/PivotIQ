@@ -16,6 +16,18 @@ const initialState = {
 };
 
 /**
+ * Sanitizes user-entered text.
+ * @param {string} value
+ * @returns {string}
+ */
+function sanitizeInput(value) {
+  return String(value || "")
+    .split("<").join("")
+    .split(">").join("")
+    .trim();
+}
+
+/**
  * Reducer for PivotIQ state transitions.
  * @param {typeof initialState} state
  * @param {{ type: string, payload?: any }} action
@@ -89,7 +101,7 @@ export function usePivotIQ() {
   async function submitIdea(idea) {
     try {
       console.log("[PivotIQ Hook] action started", { action: "submitIdea", idea: idea.substring(0, 50) });
-      const cleaned = String(idea || "").replace(/<[^>]*>/g, "").trim();
+      const cleaned = sanitizeInput(idea);
       if (cleaned.length < 20 || cleaned.length > 1000) {
         throw new Error("Idea must be between 20 and 1000 characters");
       }
@@ -130,7 +142,7 @@ export function usePivotIQ() {
   async function submitCounter(counter) {
     try {
       console.log("[PivotIQ Hook] action started", { action: "submitCounter", counter: counter.substring(0, 50) });
-      const cleaned = String(counter || "").replace(/<[^>]*>/g, "").trim();
+      const cleaned = sanitizeInput(counter);
       if (cleaned.length < 10 || cleaned.length > 2000) {
         throw new Error("Counter must be between 10 and 2000 characters");
       }
