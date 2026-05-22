@@ -94,6 +94,7 @@ function reducer(state, action) {
     case "COUNTER_SUCCESS":
       return {
         ...state,
+        // Stay in debate mode so the newest response remains visible until the user explicitly requests a plan.
         phase: "debating",
         loading: false,
         error: null,
