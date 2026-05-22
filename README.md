@@ -178,3 +178,4 @@ PivotIQ includes production-conscious safeguards:
 - Frontend error boundary and sanitized inputs
 
 If your team wants sharper market truth, stronger strategic confidence, and a clearer path from idea to execution, PivotIQ is your validation cockpit.
+project is open source under #MIT LICENCE 
