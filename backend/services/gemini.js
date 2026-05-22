@@ -242,6 +242,14 @@ export async function generateContent(systemPrompt, userPrompt, options = {}) {
         candidatesTokenCount: usageMetadata.candidatesTokenCount || null
       });
 
+      if (finishReason === "MAX_TOKENS") {
+        logger.warn("GeminiService", "MAX_TOKENS_TRUNCATION", {
+          maxOutputTokens,
+          candidatesTokenCount: usageMetadata.candidatesTokenCount || null,
+          hint: "Response was cut off. Increase maxOutputTokens to avoid truncated JSON."
+        });
+      }
+
       return text;
     } catch (error) {
       const normalizedError = toGeminiError(error);
