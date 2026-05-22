@@ -255,23 +255,23 @@ export async function generateContent(systemPrompt, userPrompt, options = {}) {
         throw normalizedError;
       }
 
-      /**
-       * Generates structured JSON in a single model call with local repair/check.
-       * @param {string} systemPrompt
-       * @param {string} userPrompt
-       * @param {{ temperature?: number, maxOutputTokens?: number, checker?: (value: any) => boolean }} [options]
-       * @returns {Promise<any>}
-       */
-      export async function generateStructuredContent(systemPrompt, userPrompt, options = {}) {
-        const text = await generateContent(systemPrompt, userPrompt, options);
-        return repairAndCheckJson(text, options.checker);
-      }
-
       await sleep(RETRY_BACKOFF_MS[attempt - 1] || 4000);
     }
   }
 
   throw { code: "GeminiError", message: "Gemini retries exhausted", retryable: false };
+}
+
+/**
+ * Generates structured JSON in a single model call with local repair/check.
+ * @param {string} systemPrompt
+ * @param {string} userPrompt
+ * @param {{ temperature?: number, maxOutputTokens?: number, checker?: (value: any) => boolean }} [options]
+ * @returns {Promise<any>}
+ */
+export async function generateStructuredContent(systemPrompt, userPrompt, options = {}) {
+  const text = await generateContent(systemPrompt, userPrompt, options);
+  return repairAndCheckJson(text, options.checker);
 }
 
 /**
