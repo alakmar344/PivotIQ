@@ -104,7 +104,7 @@ In short: **fewer blind bets, smarter launches.**
 
 ### AI architecture highlights
 - Unified agent orchestration to generate research, verdict, debate guide, and plan payloads
-- Gemini model baseline: `gemini-2.5-flash-preview-05-20`
+- Gemini model baseline: `gemini-3.5-flash`
 - Schema-checked structured output pipeline
 - Deterministic debate and planning gates for reliability
 
