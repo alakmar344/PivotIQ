@@ -29,12 +29,14 @@ router.post("/", counterRules, handleValidation, async (req, res, next) => {
       debateHistory: payload.debateHistory,
       userCounter: payload.userCounter
     });
+    const resolvedVerdict = result.verdictChanged ? result.updatedVerdict : payload.currentVerdict;
+    const planReady = Boolean(result.planReady) && resolvedVerdict?.verdict === "FEASIBLE";
 
     res.json({
       agentResponse: result.agentResponse,
       updatedVerdict: result.updatedVerdict,
       verdictChanged: Boolean(result.verdictChanged),
-      planReady: Boolean(result.planReady),
+      planReady,
       responseType: result.responseType,
       changeReason: result.changeReason
     });

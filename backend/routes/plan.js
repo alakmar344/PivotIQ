@@ -6,6 +6,47 @@ import { handleValidation, planRules, sanitizeText } from "../middleware/validat
 const router = express.Router();
 
 /**
+ * Checks whether a value is a non-empty string.
+ * @param {any} value
+ * @returns {boolean}
+ */
+function hasText(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+/**
+ * Checks whether an array contains at least one non-empty string item.
+ * @param {any} value
+ * @returns {boolean}
+ */
+function hasTextArray(value) {
+  return Array.isArray(value) && value.length > 0 && value.every(hasText);
+}
+
+/**
+ * Checks whether a cached plan has the minimum non-empty content required for reuse.
+ * @param {any} plan
+ * @returns {boolean}
+ */
+function isPlanValid(plan) {
+  return Boolean(
+    plan
+    && typeof plan === "object"
+    && hasText(plan.projectName)
+    && hasText(plan.oneLiner)
+    && Array.isArray(plan.weeklyMilestones)
+    && plan.weeklyMilestones.length > 0
+    && plan.weeklyMilestones.every((milestone) => milestone
+      && typeof milestone === "object"
+      && Number.isInteger(milestone.week)
+      && hasText(milestone.title)
+      && hasTextArray(milestone.tasks)
+      && hasText(milestone.deliverable))
+    && hasTextArray(plan.firstActions)
+  );
+}
+
+/**
  * Creates fast fallback plan if precomputed plan is missing.
  * @param {{ idea: string, finalVerdict: any }} payload
  * @returns {any}
@@ -77,6 +118,12 @@ router.post("/", planRules, handleValidation, async (req, res, next) => {
     if (warning) {
       const plan = buildFallbackPlan(payload);
       res.json({ plan, ...warning });
+      return;
+    }
+
+    if (isPlanValid(payload.precomputedPlan)) {
+      logger.info("PlanRoute", "PLAN_REUSED_PRECOMPUTED", { sessionId: payload.sessionId });
+      res.json({ plan: payload.precomputedPlan });
       return;
     }
 

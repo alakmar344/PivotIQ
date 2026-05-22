@@ -97,5 +97,6 @@ export const planRules = [
     .isLength({ min: 20, max: 1000 }),
   body("researchData").exists().isObject().withMessage("researchData is required"),
   body("finalVerdict").exists().isObject().withMessage("finalVerdict is required"),
-  body("debateHistory").exists().isArray({ max: 20 }).withMessage("debateHistory must contain max 20 entries")
+  body("debateHistory").exists().isArray({ max: 20 }).withMessage("debateHistory must contain max 20 entries"),
+  body("precomputedPlan").optional().isObject().withMessage("precomputedPlan must be an object")
 ];
