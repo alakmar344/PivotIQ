@@ -17,7 +17,7 @@ export function pingConnectionMiddleware(_req, res) {
 
   const sendPing = () => {
     const elapsedMs = Date.now() - startedAt;
-    res.write(`event: ping\ndata: ${JSON.stringify({ ok: true, elapsedMs, timestamp: new Date().toISOString() })}\n\n`);
+    res.write(`event: ping\ndata: ${JSON.stringify({ ok: true, elapsedMs, timestamp: new Date(startedAt + elapsedMs).toISOString() })}\n\n`);
   };
 
   sendPing();

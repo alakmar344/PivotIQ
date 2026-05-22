@@ -10,7 +10,8 @@ const router = express.Router();
  * @returns {any}
  */
 function buildFallbackPlan(payload) {
-  const projectName = payload.idea.split(" ").slice(0, 5).join(" ") || "PivotIQ Project";
+  const candidateName = payload.idea.split(" ").slice(0, 5).join(" ").trim();
+  const projectName = candidateName.length >= 12 ? candidateName : "PivotIQ MVP Launch Plan";
   return {
     projectName,
     oneLiner: `Build and launch ${projectName} with a lean execution-first MVP.`,
