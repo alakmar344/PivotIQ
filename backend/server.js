@@ -30,8 +30,16 @@ if (trustProxy !== undefined) {
     app.set("trust proxy", true);
   } else if (normalized === "false") {
     app.set("trust proxy", false);
-  } else if (!Number.isNaN(Number(normalized))) {
-    app.set("trust proxy", Number(normalized));
+  } else {
+    const parsed = Number(normalized);
+    if (Number.isInteger(parsed) && parsed >= 0) {
+      app.set("trust proxy", parsed);
+    } else {
+      console.warn(`Invalid TRUST_PROXY value "${trustProxy}". Expected true, false, or a non-negative integer.`);
+      if (process.env.NODE_ENV === "production") {
+        app.set("trust proxy", 1);
+      }
+    }
   }
 } else if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
