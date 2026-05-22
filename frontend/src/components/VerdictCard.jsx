@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
 
+function isMeaningfulPoint(value) {
+  if (typeof value !== "string") return false;
+  const cleaned = value.trim();
+  if (!cleaned) return false;
+  return cleaned !== "-" && cleaned !== "—";
+}
+
 /**
  * Renders feasibility verdict details.
  * @param {{ verdict: any, onDisagree?: () => void, compact?: boolean }} props
@@ -30,6 +37,8 @@ export function VerdictCard({ verdict, onDisagree, compact = false }) {
   if (!verdict) return null;
 
   const badgeColor = verdict.verdict === "FEASIBLE" ? "bg-success/20 text-success" : verdict.verdict === "RISKY" ? "bg-warning/20 text-warning" : "bg-danger/20 text-danger";
+  const pros = (verdict.pros || []).filter(isMeaningfulPoint);
+  const cons = (verdict.cons || []).filter(isMeaningfulPoint);
 
   return (
     <section className="fade-in bg-card/80 border border-border rounded-2xl p-6 space-y-5 shadow-card">
@@ -46,7 +55,7 @@ export function VerdictCard({ verdict, onDisagree, compact = false }) {
           <div>
             <h3 className="font-semibold mb-2">Pros</h3>
             <ul className="space-y-2">
-              {(verdict.pros || []).map((pro, idx) => (
+              {pros.map((pro, idx) => (
                 <li key={`${String(pro)}-${idx}`} className="text-sm text-textSecondary flex gap-2">
                   <span className="text-success">●</span>
                   <span>{pro}</span>
@@ -58,7 +67,7 @@ export function VerdictCard({ verdict, onDisagree, compact = false }) {
           <div>
             <h3 className="font-semibold mb-2">Cons</h3>
             <ul className="space-y-2">
-              {(verdict.cons || []).map((con, idx) => (
+              {cons.map((con, idx) => (
                 <li key={`${String(con)}-${idx}`} className="text-sm text-textSecondary flex gap-2">
                   <span className="text-warning">●</span>
                   <span>{con}</span>

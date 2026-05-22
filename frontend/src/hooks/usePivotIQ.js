@@ -16,7 +16,8 @@ const initialState = {
   loading: false,
   error: null,
   sessionId: null,
-  agentActivity: null
+  agentActivity: null,
+  planReady: false
 };
 
 /**
@@ -85,7 +86,8 @@ function reducer(state, action) {
         researchData: action.payload.researchData,
         verdict: action.payload.verdict,
         sessionId: action.payload.sessionId,
-        agentActivity: null
+        agentActivity: null,
+        planReady: action.payload.planReady
       };
     case "COUNTER_SUCCESS":
       return {
@@ -96,7 +98,8 @@ function reducer(state, action) {
         currentAgentResponse: action.payload.agentTurn,
         verdict: action.payload.verdict,
         debateHistory: [...state.debateHistory, action.payload.agentTurn],
-        agentActivity: null
+        agentActivity: null,
+        planReady: action.payload.planReady
       };
     case "PLAN_SUCCESS":
       return {
@@ -144,9 +147,10 @@ export function usePivotIQ() {
       verdict: state.verdict,
       debateHistory: state.debateHistory,
       plan: state.plan,
+      planReady: state.planReady,
       updatedAt: new Date().toISOString()
     };
-  }, [state.sessionId, state.idea, state.phase, state.researchData, state.verdict, state.debateHistory, state.plan]);
+  }, [state.sessionId, state.idea, state.phase, state.researchData, state.verdict, state.debateHistory, state.plan, state.planReady]);
 
   const snapshotSignature = useMemo(() => {
     if (!currentSnapshot) return "";
@@ -155,7 +159,8 @@ export function usePivotIQ() {
       phase: currentSnapshot.phase,
       verdict: currentSnapshot.verdict,
       debateHistory: currentSnapshot.debateHistory,
-      plan: currentSnapshot.plan
+      plan: currentSnapshot.plan,
+      planReady: currentSnapshot.planReady
     });
   }, [currentSnapshot]);
 
@@ -231,7 +236,8 @@ export function usePivotIQ() {
           idea: cleaned,
           researchData: response.data.researchData,
           verdict: response.data.verdict,
-          sessionId: response.data.sessionId
+          sessionId: response.data.sessionId,
+          planReady: response.data.verdict?.verdict === "FEASIBLE"
         }
       });
 
