@@ -46,7 +46,7 @@ function isUnifiedPayloadValid(value) {
 // Compact schema template sent to the model — keep as JSON.stringify so the prompt stays token-efficient.
 const OUTPUT_SCHEMA = JSON.stringify({
   researchData: { marketSize: "", competitors: [{ name: "", description: "", fundingStatus: "" }], regulations: [], trends: [], hiddenInsight: "" },
-  verdict: { feasibilityScore: 0, verdict: "FEASIBLE|RISKY|NOT_FEASIBLE", pros: [""], cons: [""], keyRisk: "", keyStrength: "", summary: "" },
+  verdict: { feasibilityScore: 0, verdict: "FEASIBLE|RISKY|NOT_FEASIBLE", pros: [], cons: [], keyRisk: "", keyStrength: "", summary: "" },
   debateGuide: { coreRebuttals: [], evidenceToWatch: [], escalationTriggers: [] },
   plan: { projectName: "", oneLiner: "", mvpScope: { features: [], outOfScope: [], timeline: "4 weeks|8 weeks|12 weeks" }, techStack: { frontend: "", backend: "", database: "", ai: "", payments: "", hosting: "" }, weeklyMilestones: [{ week: 1, title: "", tasks: [], deliverable: "" }], monetizationPath: { model: "", firstRevenueEstimate: "", approach: "" }, topRisks: [{ risk: "", mitigation: "" }], firstActions: [], resourcesNeeded: { budget: "", teamSize: 1, keySkills: [] }, successMetrics: [{ metric: "", target: "", timeline: "" }] }
 });

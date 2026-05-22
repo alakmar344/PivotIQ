@@ -6,6 +6,19 @@ const FALLBACK_HIDDEN_INSIGHT = "No hidden insight available.";
 const MAX_IDEA_PREVIEW_LENGTH = 120;
 
 /**
+ * Truncates text at a word boundary and appends ellipsis.
+ * @param {string} text
+ * @param {number} maxLen
+ * @returns {string}
+ */
+function truncateAtWord(text, maxLen) {
+  if (!text || text.length <= maxLen) return text;
+  const cut = text.lastIndexOf(" ", maxLen);
+  const truncated = cut > 0 ? text.slice(0, cut) : text.slice(0, maxLen);
+  return `${truncated}…`;
+}
+
+/**
  * Checks minimal verdict schema.
  * @param {any} verdict
  * @returns {boolean}
@@ -38,7 +51,7 @@ function buildFallbackVerdict(idea, context) {
     feasibilityScore: hasKnownMarketSignal ? 48 : 42,
     verdict: "RISKY",
     pros: [
-      `Idea has a defined problem statement: ${idea.slice(0, MAX_IDEA_PREVIEW_LENGTH)}`,
+      `Idea has a defined problem statement: ${truncateAtWord(idea, MAX_IDEA_PREVIEW_LENGTH)}`,
       `Market framing exists: ${marketSize}`,
       `Differentiation angle: ${hiddenInsight}`
     ],

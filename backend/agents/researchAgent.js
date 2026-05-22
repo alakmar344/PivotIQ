@@ -43,9 +43,14 @@ function isResearchValid(value) {
 function buildAnalysisContext(research) {
   const competitors = Array.isArray(research?.competitors) ? research.competitors : [];
   const trends = Array.isArray(research?.trends) ? research.trends : [];
+  const getCompetitorName = (item) => {
+    if (item?.name != null && String(item.name).trim() !== "") return String(item.name).trim();
+    if (item?.description != null && String(item.description).trim() !== "") return String(item.description).trim();
+    return "Unknown competitor";
+  };
   return {
     marketSize: research?.marketSize || "Unknown",
-    topCompetitors: competitors.slice(0, 3).map((item) => item?.name || item?.description || "Unknown competitor"),
+    topCompetitors: competitors.slice(0, 3).map(getCompetitorName),
     mainTrend: trends[0] || "No major trend identified",
     mainRisk: research?.mainRisk || "No critical risk identified",
     hiddenInsight: research?.hiddenInsight || "No hidden insight available"

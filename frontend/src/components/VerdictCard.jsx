@@ -47,7 +47,7 @@ export function VerdictCard({ verdict, onDisagree, compact = false }) {
             <h3 className="font-semibold mb-2">Pros</h3>
             <ul className="space-y-2">
               {(verdict.pros || []).map((pro, idx) => (
-                <li key={`${pro}-${idx}`} className="text-sm text-textSecondary flex gap-2">
+                <li key={idx} className="text-sm text-textSecondary flex gap-2">
                   <span className="text-success">●</span>
                   <span>{pro}</span>
                 </li>
@@ -59,7 +59,7 @@ export function VerdictCard({ verdict, onDisagree, compact = false }) {
             <h3 className="font-semibold mb-2">Cons</h3>
             <ul className="space-y-2">
               {(verdict.cons || []).map((con, idx) => (
-                <li key={`${con}-${idx}`} className="text-sm text-textSecondary flex gap-2">
+                <li key={idx} className="text-sm text-textSecondary flex gap-2">
                   <span className="text-warning">●</span>
                   <span>{con}</span>
                 </li>

@@ -24,7 +24,7 @@ function normalizeVerdict(verdict) {
     return items.map((item) => {
       if (typeof item === "string") return item;
       if (item && typeof item === "object") {
-        return item.point || item.evidence || JSON.stringify(item);
+        return item.point || item.evidence || "Additional consideration provided";
       }
       return String(item || "");
     }).filter(Boolean);
