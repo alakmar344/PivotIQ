@@ -179,4 +179,4 @@ PivotIQ includes production-conscious safeguards:
 
 If your team wants sharper market truth, stronger strategic confidence, and a clearer path from idea to execution, PivotIQ is your validation cockpit.
 
-##project is open source under MIT LICENCE 
+## project is open source under MIT LICENCE 
