@@ -66,18 +66,19 @@ router.post("/", planRules, handleValidation, async (req, res, next) => {
     const verdict = payload.finalVerdict?.verdict;
     const hasMitigations = Array.isArray(payload.finalVerdict?.cons) && payload.finalVerdict.cons.length > 0;
     const eligible = verdict === "FEASIBLE" || (verdict === "RISKY" && hasMitigations);
-
-    if (!eligible) {
-      const error = new Error("Idea is not ready for planning");
-      error.name = "ValidationError";
-      error.details = [{ msg: "planReady conditions failed" }];
-      throw error;
-    }
+    const warning = !eligible ? { warning: true, message: "High-risk idea. Generating lean experimental plan." } : null;
 
     logger.info("PlanRoute", "PLAN_REQUEST_RECEIVED", {
       sessionId: payload.sessionId,
-      verdict
+      verdict,
+      warning: Boolean(warning)
     });
+
+    if (warning) {
+      const plan = buildFallbackPlan(payload);
+      res.json({ plan, ...warning });
+      return;
+    }
 
     let plan;
     try {

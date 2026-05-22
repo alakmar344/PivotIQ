@@ -16,7 +16,7 @@ router.post("/", validateIdeaRules, handleValidation, async (req, res, next) => 
     logger.info("ValidateRoute", "REQUEST_RECEIVED", { ideaLength: idea.length });
 
     const researchData = await researchAgent(idea);
-    const verdict = await analysisAgent(idea, researchData);
+    const verdict = await analysisAgent(idea, researchData.analysisContext || {});
     const sessionId = uuidv4();
 
     res.json({ researchData, verdict, sessionId });
