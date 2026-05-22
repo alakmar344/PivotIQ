@@ -61,7 +61,7 @@ if (trustProxy !== undefined) {
  * @returns {void}
  */
 function requestTimeout(_req, res, next) {
-  res.setTimeout(30000, () => {
+  res.setTimeout(600000, () => {
     const error = new Error("Request timed out");
     error.code = "TimeoutError";
     next(error);
