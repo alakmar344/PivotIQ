@@ -1,219 +1,180 @@
 # PivotIQ
 
-**The AI cofounder that pressure-tests your startup idea before the market does.**
+## Startup conviction, pressure-tested.
 
-PivotIQ helps founders avoid expensive blind spots by combining live market intelligence, adversarial critique, and an execution blueprint in one premium workflow.  
-Instead of “good idea” fluff, PivotIQ gives you a boardroom-style reality check.
+**PivotIQ is the AI cofounder built to stress-test startup ideas before founders invest time, money, and team bandwidth in the wrong direction.**
 
----
-
-## Why PivotIQ matters
-
-Most early-stage ideas fail because founders ship before validating:
-- Real market demand
-- Competitive pressure
-- Execution feasibility
-- Monetization clarity
-
-PivotIQ is built to close that gap fast.  
-You submit your concept once, and the system:
-1. Researches your market and competitors
-2. Produces a feasibility verdict
-3. Debates your counter-arguments
-4. Generates a practical build plan once your thesis survives
-
-This is decision intelligence for founders, not just chat responses.
+Built during a **Google XPRIZE Hackathon** sprint, PivotIQ is designed around one core mission:  
+turn raw founder ambition into evidence-backed strategic clarity.
 
 ---
 
-## Product highlights
+## The problem PivotIQ solves
 
-- **Professional founder dashboard UI** with clear phase-based flow
-- **Single Gemini call orchestration** for research, verdict, debate guidance, and planning
-- **Evidence-backed verdicting** with score, confidence, pros/cons, key risk, and key strength
-- **Debate mode** to challenge assumptions with your own market logic
-- **Local chat history** persisted in browser localStorage so past sessions can be reopened
-- **Plan export** as markdown for immediate execution
+Most startup ideas don’t fail because founders are lazy.  
+They fail because founders move too fast with incomplete truth:
 
----
+- Assumed demand instead of proven demand
+- Excitement-driven product scope
+- Weak understanding of market incumbents
+- No clear monetization path
+- No structured way to challenge their own assumptions
 
-## Tech stack
-
-- **Frontend:** React 18, Vite, Tailwind CSS
-- **Backend:** Node.js, Express
-- **AI Engine:** Google Gemini (`gemini-2.5-flash-preview-05-20`)
-- **Web intelligence:** Serper API
+PivotIQ exists to close that gap with a repeatable validation engine.
 
 ---
 
-## Repository structure
+## What makes PivotIQ different
+
+PivotIQ is not a generic chatbot.  
+It is a decision system built for founders who need hard strategic signals.
+
+**PivotIQ is for founders who want signal over hype.**
+
+### 1) Unified intelligence in one flow
+- Market and competitor research
+- Feasibility scoring and verdicting
+- Adversarial debate guidance
+- Execution plan generation
+
+### 2) Boardroom-style verdicts
+Each idea is evaluated with:
+- Feasibility score
+- Verdict class (`FEASIBLE`, `RISKY`, `NOT_FEASIBLE`)
+- Strengths and critical weaknesses
+- Confidence level
+- Key strategic risk and key strategic advantage
+
+### 3) Debate mode for founder defense
+Founders can challenge the first verdict with counter-arguments.  
+PivotIQ responds with pressure-test logic and evidence priorities, forcing the thesis to become stronger before execution.
+
+### 4) Execution blueprint when the thesis survives
+Once the idea passes readiness conditions, PivotIQ generates:
+- MVP scope
+- Weekly milestone roadmap
+- Monetization direction
+- Risk register with mitigations
+- Resource and success metric guidance
+
+---
+
+## Product experience
+
+PivotIQ is structured as a premium, phase-based founder workflow:
+
+1. **Submit startup concept**
+2. **Receive research-backed verdict**
+3. **Enter adversarial debate mode**
+4. **Harden assumptions with evidence**
+5. **Unlock execution plan**
+6. **Export plan as markdown**
+
+Session continuity is built in via browser-stored chat history, allowing founders to revisit and refine prior decision cycles.
+
+---
+
+## Built for the Google XPRIZE Hackathon
+
+PivotIQ was created as a high-impact hackathon build focused on practical startup outcomes:
+
+- Faster founder decision quality
+- Less capital wasted on weak assumptions
+- More disciplined idea-to-execution transitions
+- Clearer go / no-go confidence signals
+
+In short: **fewer blind bets, smarter launches.**
+
+---
+
+## Technical product snapshot
+
+### Frontend
+- React 18
+- Vite
+- Tailwind CSS
+- Axios
+- DOMPurify for input sanitization
+
+### Backend
+- Node.js + Express
+- Google Gemini structured generation pipeline
+- Serper-powered web intelligence
+- Input validation, timeout handling, rate limiting, and centralized error handling
+
+### AI architecture highlights
+- Unified agent orchestration to generate research, verdict, debate guide, and plan payloads
+- Gemini model baseline: `gemini-2.5-flash-preview-05-20`
+- Schema-checked structured output pipeline
+- Deterministic debate and planning gates for reliability
+
+---
+
+## API capabilities
+
+### `POST /api/validate`
+Accepts a founder idea and returns market research, verdict, debate guide, and session initialization data.
+
+### `POST /api/counter`
+Accepts founder counter-arguments and continues adversarial debate with readiness signaling.
+
+### `POST /api/plan`
+Returns structured execution planning when idea readiness criteria are met.
+
+### `GET /api/ping/stream`
+Server-sent keep-alive stream for stable frontend-backend connectivity behavior.
+
+---
+
+## Repository map
 
 ```text
 PivotIQ/
 ├── backend/
-│   ├── server.js
-│   ├── .env.example
-│   ├── routes/
-│   │   ├── validate.js
-│   │   ├── counter.js
-│   │   └── plan.js
-│   ├── agents/
-│   │   ├── researchAgent.js
-│   │   ├── analysisAgent.js
-│   │   ├── adversarialAgent.js
-│   │   └── planAgent.js
-│   ├── services/
-│   │   ├── gemini.js
-│   │   └── serper.js
-│   ├── middleware/
-│   └── utils/
+│   ├── agents/        # AI orchestration logic
+│   ├── routes/        # Validate / counter / plan endpoints
+│   ├── middleware/    # Validation, rate limiting, error handling, ping stream
+│   ├── services/      # Gemini + Serper integrations
+│   ├── utils/         # Logging utilities
+│   └── server.js      # Express app bootstrap
 └── frontend/
-    ├── src/
-    │   ├── App.jsx
-    │   ├── hooks/usePivotIQ.js
-    │   ├── components/
-    │   └── utils/api.js
+    ├── src/components # Product UI surfaces (verdict, debate, plan, etc.)
+    ├── src/hooks      # Core app state + workflow control
+    ├── src/utils      # API client utilities
+    └── src/App.jsx    # Main application experience
 ```
 
 ---
 
-## Quick start
+## Environment variables reference
 
-### 1) Clone and install
+PivotIQ uses environment-based configuration for secure runtime setup.
 
-```bash
-git clone https://github.com/alakmar344/PivotIQ.git
-cd PivotIQ
-```
+### Backend
+- `NODE_ENV`
+- `PORT`
+- `GEMINI_API_KEY`
+- `SERPER_API_KEY`
+- `FRONTEND_URL`
+- `TRUST_PROXY`
+- `LOG_LEVEL`
 
-Backend dependencies:
-
-```bash
-cd backend
-npm install
-cp .env.example .env
-```
-
-Frontend dependencies:
-
-```bash
-cd ../frontend
-npm install
-```
+### Frontend
+- `VITE_API_URL`
 
 ---
 
-## Environment configuration
+## Security and reliability posture
 
-Update `backend/.env` with:
+PivotIQ includes production-conscious safeguards:
 
-| Variable | Required | Description |
-|---|---|---|
-| `NODE_ENV` | Yes | Runtime mode (`development` / `production`) |
-| `PORT` | Yes | Backend port (example `3001`) |
-| `GEMINI_API_KEY` | Yes | Gemini API key |
-| `SERPER_API_KEY` | Yes | Serper API key |
-| `FRONTEND_URL` | Yes | Allowed frontend origin for CORS |
-| `TRUST_PROXY` | No | Proxy hop count (use `1` on Render/Railway) for accurate rate limiting |
-| `LOG_LEVEL` | No | Logger verbosity |
+- Helmet security headers
+- CORS origin controls
+- API rate limiting
+- Request validation and sanitization
+- Structured error handling
+- Request timeout protection
+- SSE connection health support
+- Frontend error boundary and sanitized inputs
 
-Frontend environment:
-
-| Variable | Required | Description |
-|---|---|---|
-| `VITE_API_URL` | Yes | Backend base URL |
-
----
-
-## Run locally
-
-Start backend:
-
-```bash
-cd backend
-npm run dev
-```
-
-Start frontend in another terminal:
-
-```bash
-cd frontend
-npm run dev
-```
-
-- Frontend: `http://localhost:5173`
-- Backend: `http://localhost:3001`
-
----
-
-## API overview
-
-### `POST /api/validate`
-Submit a startup idea and get research + first verdict.
-
-### `POST /api/counter`
-Challenge the verdict with your argument and continue debate turns.
-
-### `POST /api/plan`
-Generate a build plan once the idea is ready for execution.
-
-### `GET /api/ping/stream`
-Frontend-backend keep-alive stream (SSE) with 5-second ping events for 2 minutes.
-
----
-
-## Founder workflow
-
-1. Describe idea in detail
-2. Review feasibility verdict
-3. Enter debate mode and defend your thesis
-4. Let PivotIQ refine verdict confidence
-5. Generate and export your execution plan
-6. Reopen prior sessions from local chat history
-
----
-
-## Security and production readiness
-
-- Helmet headers
-- CORS restrictions
-- Rate limiting
-- Input validation
-- Global error handling
-- Request timeout handling
-- Retry logic for upstream AI calls
-- 5-step JSON repair + schema checking for structured AI output
-- Frontend error boundary
-- DOMPurify input sanitization on frontend
-- SSE keep-alive ping stream (`/api/ping/stream`) every 5s with 2-minute connection window
-
----
-
-## Deployment
-
-### Frontend (Vercel)
-1. Import `frontend/`
-2. Set `VITE_API_URL`
-3. Deploy
-
-### Backend (Render/Railway)
-1. Import `backend/`
-2. Set environment variables from `.env.example`
-3. Build command: `npm install && npm run build`
-4. Start command: `npm start`
-5. Ensure `FRONTEND_URL` matches deployed frontend domain
-
-For Render, set:
-
-```bash
-Root Directory: backend
-Build Command: npm install && npm run build
-Start Command: npm start
-```
-
----
-
-## Positioning statement
-
-PivotIQ is for serious founders who want to de-risk decisions fast.  
-If you need sharper market truth, stronger strategic clarity, and faster execution confidence, PivotIQ is your validation engine.
+If your team wants sharper market truth, stronger strategic confidence, and a clearer path from idea to execution, PivotIQ is your validation cockpit.
