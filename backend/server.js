@@ -4,6 +4,7 @@ import helmet from "helmet";
 import validateRoute from "./routes/validate.js";
 import counterRoute from "./routes/counter.js";
 import planRoute from "./routes/plan.js";
+import { pingConnectionMiddleware } from "./middleware/pingConnection.js";
 import { apiRateLimiter } from "./middleware/rateLimiter.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { logger } from "./utils/logger.js";
@@ -72,6 +73,7 @@ app.use(helmet());
 app.use(cors({ origin: frontendUrl }));
 app.use(express.json({ limit: "50kb" }));
 app.use(requestTimeout);
+app.get("/api/ping/stream", pingConnectionMiddleware);
 app.use("/api", apiRateLimiter);
 
 app.use((req, res, next) => {
