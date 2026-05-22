@@ -25,17 +25,24 @@ const version = "1.0.0";
 const trustProxy = process.env.TRUST_PROXY;
 
 if (trustProxy !== undefined) {
-  const normalized = trustProxy.trim().toLowerCase();
-  if (normalized === "true") {
+  const normalized = trustProxy.trim();
+  const lowered = normalized.toLowerCase();
+  if (lowered === "true") {
     app.set("trust proxy", true);
-  } else if (normalized === "false") {
+  } else if (lowered === "false") {
     app.set("trust proxy", false);
   } else {
     const parsed = Number(normalized);
     if (Number.isInteger(parsed) && parsed >= 0) {
       app.set("trust proxy", parsed);
     } else {
-      console.warn(`Invalid TRUST_PROXY value "${trustProxy}". Expected true, false, or a non-negative integer.`);
+      console.warn(
+        `Invalid TRUST_PROXY value "${trustProxy}". Expected true, false, or a non-negative integer. ${
+          process.env.NODE_ENV === "production"
+            ? "Falling back to trust proxy=1 in production."
+            : "No trust proxy set in non-production."
+        }`
+      );
       if (process.env.NODE_ENV === "production") {
         app.set("trust proxy", 1);
       }
