@@ -53,15 +53,17 @@ function App() {
 
       <main className="flex-1 px-6 py-8">
         <div className="max-w-6xl mx-auto space-y-5">
-          <section className="bg-card/80 border border-border rounded-2xl p-6 md:p-8 shadow-card">
-            <div className="max-w-3xl">
-              <p className="text-xs uppercase tracking-[0.2em] text-primary mb-3">Investor-ready validation engine</p>
-              <h2 className="text-2xl md:text-4xl font-bold leading-tight">From raw idea to market-tested execution strategy.</h2>
-              <p className="text-textSecondary mt-3">
-                PivotIQ combines market research, adversarial questioning, and a tactical build roadmap in one decision cockpit.
-              </p>
-            </div>
-          </section>
+          {state.phase === "idle" ? (
+            <section className="bg-card/80 border border-border rounded-2xl p-6 md:p-8 shadow-card">
+              <div className="max-w-3xl">
+                <p className="text-xs uppercase tracking-[0.2em] text-primary mb-3">Investor-ready validation engine</p>
+                <h2 className="text-2xl md:text-4xl font-bold leading-tight">From raw idea to market-tested execution strategy.</h2>
+                <p className="text-textSecondary mt-3">
+                  PivotIQ combines market research, adversarial questioning, and a tactical build roadmap in one decision cockpit.
+                </p>
+              </div>
+            </section>
+          ) : null}
 
           {showHistory ? (
             <section className="bg-card/80 border border-border rounded-2xl p-4 md:p-6 space-y-3 shadow-card fade-in">
@@ -119,11 +121,13 @@ function App() {
           {state.phase === "verdict" ? (
             <div className="space-y-4 fade-in">
               <VerdictCard verdict={state.verdict} onDisagree={handleDisagree} />
+              <button type="button" onClick={generatePlan} className="px-4 py-2 bg-success hover:bg-success/80 rounded-lg font-medium">
+                Generate Full Plan
+              </button>
               <button type="button" onClick={() => setShowSources((prev) => !prev)} className="text-sm text-primary hover:underline">
                 {showSources ? "Hide" : "Show"} Research Sources
               </button>
               {showSources ? <ResearchSources researchData={state.researchData} /> : null}
-              <CounterInput onSubmit={submitCounter} loading={state.loading} />
             </div>
           ) : null}
 
