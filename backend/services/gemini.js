@@ -240,9 +240,6 @@ export async function generateContent(systemPrompt, userPrompt, options = {}) {
       logger.info("GeminiService", "REQUEST_COMPLETE", {
         latencyMs: Date.now() - startedAt,
         finishReason,
-        totalTokenCount: usageMetadata.totalTokenCount || null,
-        promptTokenCount: usageMetadata.promptTokenCount || null,
-        candidatesTokenCount: usageMetadata.candidatesTokenCount || null,
         agentName
       });
       logger.info("GeminiService", "RAW_RESPONSE_PREVIEW", {

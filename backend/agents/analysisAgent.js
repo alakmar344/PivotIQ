@@ -1,6 +1,10 @@
 import { generateContent, repairAndCheckJson } from "../services/gemini.js";
 import { logger } from "../utils/logger.js";
 
+const FALLBACK_MAIN_RISK = "Evidence quality and execution risk remain high.";
+const FALLBACK_HIDDEN_INSIGHT = "No hidden insight available.";
+const MAX_IDEA_PREVIEW_LENGTH = 120;
+
 /**
  * Checks minimal verdict schema.
  * @param {any} verdict
@@ -27,14 +31,14 @@ function isVerdictValid(verdict) {
 function buildFallbackVerdict(idea, context) {
   const topCompetitors = Array.isArray(context?.topCompetitors) ? context.topCompetitors : [];
   const marketSize = context?.marketSize || "Unknown";
-  const mainRisk = context?.mainRisk || "Evidence quality and execution risk remain high.";
-  const hiddenInsight = context?.hiddenInsight || "No hidden insight available.";
+  const mainRisk = context?.mainRisk || FALLBACK_MAIN_RISK;
+  const hiddenInsight = context?.hiddenInsight || FALLBACK_HIDDEN_INSIGHT;
   const hasKnownMarketSignal = !String(marketSize).toLowerCase().includes("unknown");
   return {
     feasibilityScore: hasKnownMarketSignal ? 48 : 42,
     verdict: "RISKY",
     pros: [
-      `Idea has a defined problem statement: ${idea.slice(0, 120)}`,
+      `Idea has a defined problem statement: ${idea.slice(0, MAX_IDEA_PREVIEW_LENGTH)}`,
       `Market framing exists: ${marketSize}`,
       `Differentiation angle: ${hiddenInsight}`
     ],

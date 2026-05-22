@@ -117,7 +117,6 @@ Schema: { marketSize, competitors: [{name, description, fundingStatus}], regulat
       promptLength: userPrompt.length
     });
 
-    logger.agent("ResearchAgent", "GEMINI_CALL_START", { promptLength: userPrompt.length });
     let research = null;
     let retryCount = 0;
     try {
