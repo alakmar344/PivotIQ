@@ -4,7 +4,7 @@
 
 **PivotIQ is the AI cofounder built to stress-test startup ideas before founders invest time, money, and team bandwidth in the wrong direction.**
 
-Built as a **Google XPRIZE Hackathon** project, PivotIQ is designed around one core mission:  
+Built during a **Google XPRIZE Hackathon** sprint, PivotIQ is designed around one core mission:  
 turn raw founder ambition into evidence-backed strategic clarity.
 
 ---
@@ -28,6 +28,8 @@ PivotIQ exists to close that gap with a repeatable validation engine.
 
 PivotIQ is not a generic chatbot.  
 It is a decision system built for founders who need hard strategic signals.
+
+**PivotIQ is for founders who want signal over hype.**
 
 ### 1) Unified intelligence in one flow
 - Market and competitor research
@@ -102,6 +104,7 @@ In short: **fewer blind bets, smarter launches.**
 
 ### AI architecture highlights
 - Unified agent orchestration to generate research, verdict, debate guide, and plan payloads
+- Gemini model baseline: `gemini-2.5-flash-preview-05-20`
 - Schema-checked structured output pipeline
 - Deterministic debate and planning gates for reliability
 
@@ -174,9 +177,4 @@ PivotIQ includes production-conscious safeguards:
 - SSE connection health support
 - Frontend error boundary and sanitized inputs
 
----
-
-## Brand positioning
-
-**PivotIQ is for founders who want signal over hype.**  
 If your team wants sharper market truth, stronger strategic confidence, and a clearer path from idea to execution, PivotIQ is your validation cockpit.
