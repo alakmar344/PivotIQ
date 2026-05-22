@@ -22,6 +22,20 @@ const app = express();
 const port = Number(process.env.PORT || 3001);
 const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
 const version = "1.0.0";
+const trustProxy = process.env.TRUST_PROXY;
+
+if (trustProxy !== undefined) {
+  const normalized = trustProxy.trim().toLowerCase();
+  if (normalized === "true") {
+    app.set("trust proxy", true);
+  } else if (normalized === "false") {
+    app.set("trust proxy", false);
+  } else if (!Number.isNaN(Number(normalized))) {
+    app.set("trust proxy", Number(normalized));
+  }
+} else if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
 
 /**
  * Request timeout middleware.
