@@ -1,6 +1,7 @@
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
-import { unifiedAgent } from "../agents/unifiedAgent.js";
+import { researchAgent } from "../agents/researchAgent.js";
+import { analysisAgent } from "../agents/analysisAgent.js";
 import { logger } from "../utils/logger.js";
 import { handleValidation, validateIdeaRules, sanitizeText } from "../middleware/validator.js";
 
@@ -14,13 +15,8 @@ router.post("/", validateIdeaRules, handleValidation, async (req, res, next) => 
     const idea = sanitizeText(req.body.idea);
     logger.info("ValidateRoute", "REQUEST_RECEIVED", { ideaLength: idea.length });
 
-    const unified = await unifiedAgent(idea);
-    const researchData = {
-      ...unified.researchData,
-      debateGuide: unified.debateGuide,
-      precomputedPlan: unified.plan
-    };
-    const verdict = unified.verdict;
+    const researchData = await researchAgent(idea);
+    const verdict = await analysisAgent(idea, researchData);
     const sessionId = uuidv4();
 
     res.json({ researchData, verdict, sessionId });
