@@ -10,3 +10,12 @@ export const api = axios.create({
   timeout: 60000,
   headers: { "Content-Type": "application/json" }
 });
+
+/**
+ * Builds absolute API URL.
+ * @param {string} path
+ * @returns {string}
+ */
+export function getApiUrl(path) {
+  return `${baseURL.replace(/\/$/, "")}${path.startsWith("/") ? path : `/${path}`}`;
+}

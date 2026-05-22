@@ -70,6 +70,140 @@ function extractText(response) {
 }
 
 /**
+ * Removes markdown code fences from model text.
+ * @param {string} text
+ * @returns {string}
+ */
+function stripCodeFences(text) {
+  return String(text || "")
+    .replace(/^```(?:json)?/gim, "")
+    .replace(/```$/gim, "")
+    .trim();
+}
+
+/**
+ * Applies lightweight JSON normalization.
+ * @param {string} text
+ * @returns {string}
+ */
+function normalizeJsonText(text) {
+  return String(text || "")
+    .replace(/[\u201C\u201D]/g, "\"")
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
+    .replace(/,\s*([}\]])/g, "$1")
+    .trim();
+}
+
+/**
+ * Extracts first balanced JSON object/array from text.
+ * @param {string} text
+ * @returns {string}
+ */
+function extractBalancedJson(text) {
+  const input = String(text || "");
+  const start = input.search(/[{\[]/);
+  if (start < 0) return input;
+
+  const stack = [];
+  let inString = false;
+  let escape = false;
+
+  for (let i = start; i < input.length; i += 1) {
+    const ch = input[i];
+    if (inString) {
+      if (escape) {
+        escape = false;
+      } else if (ch === "\\") {
+        escape = true;
+      } else if (ch === "\"") {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (ch === "\"") {
+      inString = true;
+      continue;
+    }
+
+    if (ch === "{" || ch === "[") {
+      stack.push(ch);
+      continue;
+    }
+
+    if (ch === "}" || ch === "]") {
+      const top = stack[stack.length - 1];
+      if ((ch === "}" && top === "{") || (ch === "]" && top === "[")) {
+        stack.pop();
+        if (stack.length === 0) {
+          return input.slice(start, i + 1);
+        }
+      }
+    }
+  }
+
+  return input.slice(start);
+}
+
+/**
+ * Parses and validates structured JSON using a 5-step repair/checker flow.
+ * @param {string} text
+ * @param {(value: any) => boolean} checker
+ * @returns {any}
+ */
+export function repairAndCheckJson(text, checker) {
+  const step1 = stripCodeFences(text);
+  let parsed = null;
+
+  // Step 1: direct parse after fence strip.
+  try {
+    parsed = JSON.parse(step1);
+  } catch (_error) {
+    parsed = null;
+  }
+
+  // Step 2: normalized parse.
+  if (!parsed) {
+    const step2 = normalizeJsonText(step1);
+    try {
+      parsed = JSON.parse(step2);
+    } catch (_error) {
+      parsed = null;
+    }
+  }
+
+  // Step 3: parse extracted balanced block.
+  if (!parsed) {
+    const step3 = extractBalancedJson(step1);
+    try {
+      parsed = JSON.parse(step3);
+    } catch (_error) {
+      parsed = null;
+    }
+  }
+
+  // Step 4: normalize extracted block and parse.
+  if (!parsed) {
+    const step4 = normalizeJsonText(extractBalancedJson(step1));
+    try {
+      parsed = JSON.parse(step4);
+    } catch (_error) {
+      parsed = null;
+    }
+  }
+
+  // Step 5: schema check.
+  if (!parsed || (typeof checker === "function" && !checker(parsed))) {
+    const error = new Error("Structured JSON repair/check failed");
+    error.code = "GeminiError";
+    throw error;
+  }
+
+  return parsed;
+}
+
+/**
  * Generates text content from Gemini with retry logic.
  * @param {string} systemPrompt
  * @param {string} userPrompt
@@ -119,6 +253,18 @@ export async function generateContent(systemPrompt, userPrompt, options = {}) {
 
       if (!normalizedError.retryable || attempt === MAX_RETRIES) {
         throw normalizedError;
+      }
+
+      /**
+       * Generates structured JSON in a single model call with local repair/check.
+       * @param {string} systemPrompt
+       * @param {string} userPrompt
+       * @param {{ temperature?: number, maxOutputTokens?: number, checker?: (value: any) => boolean }} [options]
+       * @returns {Promise<any>}
+       */
+      export async function generateStructuredContent(systemPrompt, userPrompt, options = {}) {
+        const text = await generateContent(systemPrompt, userPrompt, options);
+        return repairAndCheckJson(text, options.checker);
       }
 
       await sleep(RETRY_BACKOFF_MS[attempt - 1] || 4000);

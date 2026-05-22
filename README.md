@@ -29,7 +29,7 @@ This is decision intelligence for founders, not just chat responses.
 ## Product highlights
 
 - **Professional founder dashboard UI** with clear phase-based flow
-- **Multi-agent analysis pipeline** (research, analysis, adversarial challenge, planning)
+- **Single Gemini call orchestration** for research, verdict, debate guidance, and planning
 - **Evidence-backed verdicting** with score, confidence, pros/cons, key risk, and key strength
 - **Debate mode** to challenge assumptions with your own market logic
 - **Local chat history** persisted in browser localStorage so past sessions can be reopened
@@ -157,6 +157,9 @@ Challenge the verdict with your argument and continue debate turns.
 ### `POST /api/plan`
 Generate a build plan once the idea is ready for execution.
 
+### `GET /api/ping/stream`
+Frontend-backend keep-alive stream (SSE) with 5-second ping events for 2 minutes.
+
 ---
 
 ## Founder workflow
@@ -179,7 +182,10 @@ Generate a build plan once the idea is ready for execution.
 - Global error handling
 - Request timeout handling
 - Retry logic for upstream AI calls
+- 5-step JSON repair + schema checking for structured AI output
 - Frontend error boundary
+- DOMPurify input sanitization on frontend
+- SSE keep-alive ping stream (`/api/ping/stream`) every 5s with 2-minute connection window
 
 ---
 

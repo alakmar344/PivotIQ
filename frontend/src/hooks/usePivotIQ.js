@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { api } from "../utils/api";
+import DOMPurify from "dompurify";
+import { api, getApiUrl } from "../utils/api";
 
 const HISTORY_STORAGE_KEY = "pivotiq-chat-history-v1";
 const HISTORY_LIMIT = 12;
@@ -52,10 +53,8 @@ function writeHistory(sessions) {
  * @returns {string}
  */
 function sanitizeInput(value) {
-  return String(value || "")
-    .split("<").join("")
-    .split(">").join("")
-    .trim();
+  const purified = DOMPurify.sanitize(String(value || ""), { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+  return purified.replace(/\s+/g, " ").trim();
 }
 
 /**
@@ -172,6 +171,39 @@ export function usePivotIQ() {
       return next;
     });
   }, [currentSnapshot, snapshotSignature]);
+
+  useEffect(() => {
+    let stopped = false;
+    let source = null;
+    let reconnectTimer = null;
+
+    const connect = () => {
+      if (stopped) return;
+      source = new EventSource(getApiUrl("/api/ping/stream"));
+
+      source.addEventListener("close", () => {
+        source?.close();
+        if (!stopped) {
+          reconnectTimer = setTimeout(connect, 100);
+        }
+      });
+
+      source.onerror = () => {
+        source?.close();
+        if (!stopped) {
+          reconnectTimer = setTimeout(connect, 1000);
+        }
+      };
+    };
+
+    connect();
+
+    return () => {
+      stopped = true;
+      if (reconnectTimer) clearTimeout(reconnectTimer);
+      source?.close();
+    };
+  }, []);
 
   /**
    * Submits startup idea for validation.
