@@ -108,7 +108,6 @@ Search Results: ${JSON.stringify(slimmedSearch)}`;
   const parsed = await generateStructuredContent(systemPrompt, userPrompt, {
   temperature: 0.35,
   maxOutputTokens: 1200,
-  responseMimeType: "application/json",
   checker: isUnifiedPayloadValid
 });
 
