@@ -121,9 +121,11 @@ function App() {
           {state.phase === "verdict" ? (
             <div className="space-y-4 fade-in">
               <VerdictCard verdict={state.verdict} onDisagree={handleDisagree} />
-              <button type="button" onClick={generatePlan} className="px-4 py-2 bg-success hover:bg-success/80 rounded-lg font-medium">
-                Generate Full Plan
-              </button>
+              {state.planReady ? (
+                <button type="button" onClick={generatePlan} className="px-4 py-2 bg-success hover:bg-success/80 rounded-lg font-medium">
+                  Generate Full Plan
+                </button>
+              ) : null}
               <button type="button" onClick={() => setShowSources((prev) => !prev)} className="text-sm text-primary hover:underline">
                 {showSources ? "Hide" : "Show"} Research Sources
               </button>
@@ -136,9 +138,11 @@ function App() {
               <VerdictCard verdict={state.verdict} compact />
               <DebateThread history={state.debateHistory} />
               <CounterInput onSubmit={submitCounter} loading={state.loading} />
-              <button type="button" onClick={generatePlan} className="px-4 py-2 bg-success hover:bg-success/80 rounded-lg font-medium">
-                Generate Build Plan
-              </button>
+              {state.planReady ? (
+                <button type="button" onClick={generatePlan} className="px-4 py-2 bg-success hover:bg-success/80 rounded-lg font-medium">
+                  Generate Build Plan
+                </button>
+              ) : null}
             </div>
           ) : null}
 
