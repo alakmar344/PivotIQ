@@ -6,13 +6,29 @@ import { handleValidation, planRules, sanitizeText } from "../middleware/validat
 const router = express.Router();
 
 /**
- * Checks minimal plan payload shape.
+ * Checks whether a value is a non-empty string.
+ * @param {any} value
+ * @returns {boolean}
+ */
+function hasText(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+/**
+ * Checks whether an array contains at least one non-empty string item.
+ * @param {any} value
+ * @returns {boolean}
+ */
+function hasTextArray(value) {
+  return Array.isArray(value) && value.length > 0 && value.every(hasText);
+}
+
+/**
+ * Checks whether a cached plan has the minimum non-empty content required for reuse.
  * @param {any} plan
  * @returns {boolean}
  */
 function isPlanValid(plan) {
-  const hasText = (value) => typeof value === "string" && value.trim().length > 0;
-  const hasTextArray = (value) => Array.isArray(value) && value.length > 0 && value.every(hasText);
   return Boolean(
     plan
     && typeof plan === "object"
