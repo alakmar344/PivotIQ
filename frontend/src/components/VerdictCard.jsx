@@ -41,17 +41,15 @@ export function VerdictCard({ verdict, onDisagree, compact = false }) {
         <div className={`px-3 py-1 rounded-full text-sm font-semibold ${badgeColor}`}>{verdict.verdict}</div>
       </div>
 
-      <div className="text-sm text-textSecondary">Confidence: <span className="text-textPrimary uppercase">{verdict.confidenceLevel}</span></div>
-
       {!compact && (
         <>
           <div>
             <h3 className="font-semibold mb-2">Pros</h3>
             <ul className="space-y-2">
               {(verdict.pros || []).map((pro, idx) => (
-                <li key={`${pro.point}-${idx}`} className="text-sm text-textSecondary flex gap-2">
-                  <span className={pro.strength === "strong" ? "text-success" : "text-warning"}>●</span>
-                  <span><strong className="text-textPrimary">{pro.point}</strong> — {pro.evidence}</span>
+                <li key={`${String(pro)}-${idx}`} className="text-sm text-textSecondary flex gap-2">
+                  <span className="text-success">●</span>
+                  <span>{pro}</span>
                 </li>
               ))}
             </ul>
@@ -61,9 +59,9 @@ export function VerdictCard({ verdict, onDisagree, compact = false }) {
             <h3 className="font-semibold mb-2">Cons</h3>
             <ul className="space-y-2">
               {(verdict.cons || []).map((con, idx) => (
-                <li key={`${con.point}-${idx}`} className="text-sm text-textSecondary flex gap-2">
-                  <span className={con.severity === "critical" ? "text-danger" : con.severity === "major" ? "text-warning" : "text-textSecondary"}>●</span>
-                  <span><strong className="text-textPrimary">{con.point}</strong> — {con.evidence}</span>
+                <li key={`${String(con)}-${idx}`} className="text-sm text-textSecondary flex gap-2">
+                  <span className="text-warning">●</span>
+                  <span>{con}</span>
                 </li>
               ))}
             </ul>

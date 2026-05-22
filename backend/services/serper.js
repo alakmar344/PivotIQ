@@ -60,6 +60,23 @@ function normalizeResults(data) {
 }
 
 /**
+ * Compresses grouped search results for prompt-safe context windows.
+ * Keeps only top 2 results per query and only title/snippet/link fields.
+ * @param {Array<{query: string, results: Array<any>}>} grouped
+ * @returns {Array<{query: string, results: Array<{title: string, snippet: string, link: string}>}>}
+ */
+export function compressSearchResults(grouped = []) {
+  return grouped.map(({ query, results }) => ({
+    query,
+    results: (Array.isArray(results) ? results : []).slice(0, 2).map((item) => ({
+      title: item?.title || "Untitled",
+      snippet: item?.snippet || "",
+      link: item?.link || ""
+    }))
+  }));
+}
+
+/**
  * Runs a web search via Serper.
  * @param {string} query
  * @param {{ num?: number, type?: "search"|"news" }} [options]
@@ -122,18 +139,14 @@ export async function searchWeb(query, options = {}) {
  */
 export async function searchMultiple(queries) {
   try {
-    const grouped = [];
-    const flat = [];
-
-    for (let index = 0; index < queries.length; index += 3) {
-      const chunk = queries.slice(index, index + 3);
-      const responses = await Promise.all(chunk.map(async (query) => {
+    const responses = await Promise.all(
+      queries.map(async (query) => {
         const res = await searchWeb(query, { num: 8, type: "search" });
         return { query, ...res };
-      }));
-      grouped.push(...responses.map((response) => ({ query: response.query, results: response.results })));
-      flat.push(...responses.flatMap((response) => response.results));
-    }
+      })
+    );
+    const grouped = responses.map((response) => ({ query: response.query, results: response.results }));
+    const flat = responses.flatMap((response) => response.results);
 
     const seen = new Set();
     const deduped = flat.filter((item) => {

@@ -13,6 +13,30 @@ function parseJson(text) {
 }
 
 /**
+ * Normalizes verdict list fields to string arrays.
+ * @param {any} verdict
+ * @returns {any}
+ */
+function normalizeVerdict(verdict) {
+  if (!verdict || typeof verdict !== "object") return verdict;
+  const toTextArray = (items) => {
+    if (!Array.isArray(items)) return [];
+    return items.map((item) => {
+      if (typeof item === "string") return item;
+      if (item && typeof item === "object") {
+        return item.point || item.evidence || "Additional consideration provided";
+      }
+      return String(item || "");
+    }).filter(Boolean);
+  };
+  return {
+    ...verdict,
+    pros: toTextArray(verdict.pros),
+    cons: toTextArray(verdict.cons)
+  };
+}
+
+/**
  * Detects if user counter likely introduces factual claim.
  * @param {string} text
  * @returns {boolean}
@@ -57,7 +81,9 @@ Your job:
 Respond with:
 - responseType: "challenged" | "acknowledged" | "verdict_updated" | "plan_ready"
 - agentResponse: your detailed counter or acknowledgment (plain English, 150-250 words)
-- updatedVerdict: updated verdict object (same schema as before) or null if unchanged
+- updatedVerdict: updated verdict object using schema
+  { feasibilityScore, verdict, pros: string[], cons: string[], summary, keyRisk, keyStrength }
+  or null if unchanged
 - verdictChanged: boolean
 - changeReason: why verdict changed (if it did)
 - planReady: true if you now agree the idea is feasible enough to plan
@@ -75,7 +101,10 @@ Return ONLY valid JSON. No markdown. No backticks.`;
       planReady: parsed.planReady
     });
 
-    return parsed;
+    return {
+      ...parsed,
+      updatedVerdict: normalizeVerdict(parsed.updatedVerdict)
+    };
   } catch (error) {
     logger.error("AdversarialAgent", "FAILED", error);
     throw error;

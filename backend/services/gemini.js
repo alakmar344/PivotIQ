@@ -207,12 +207,14 @@ export function repairAndCheckJson(text, checker) {
  * Generates text content from Gemini with retry logic.
  * @param {string} systemPrompt
  * @param {string} userPrompt
- * @param {{ temperature?: number, maxOutputTokens?: number }} [options]
+ * @param {{ temperature?: number, maxOutputTokens?: number, responseMimeType?: string, agentName?: string }} [options]
  * @returns {Promise<string>}
  */
 export async function generateContent(systemPrompt, userPrompt, options = {}) {
   const temperature = options.temperature ?? 0.7;
   const maxOutputTokens = options.maxOutputTokens ?? 4096;
+  const responseMimeType = options.responseMimeType ?? "application/json";
+  const agentName = options.agentName || "UnknownAgent";
 
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt += 1) {
     const startedAt = Date.now();
@@ -220,13 +222,14 @@ export async function generateContent(systemPrompt, userPrompt, options = {}) {
       logger.info("GeminiService", "REQUEST_START", {
         model: MODEL_NAME,
         promptLength: systemPrompt.length + userPrompt.length,
-        attempt
+        attempt,
+        agentName
       });
 
       const model = client.getGenerativeModel({ model: MODEL_NAME });
       const result = await model.generateContent({
         contents: [{ role: "user", parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }] }],
-        generationConfig: { temperature, maxOutputTokens }
+        generationConfig: { temperature, maxOutputTokens, responseMimeType }
       });
 
       const response = result?.response;
@@ -237,6 +240,13 @@ export async function generateContent(systemPrompt, userPrompt, options = {}) {
       logger.info("GeminiService", "REQUEST_COMPLETE", {
         latencyMs: Date.now() - startedAt,
         finishReason,
+        agentName
+      });
+      logger.info("GeminiService", "RAW_RESPONSE_PREVIEW", {
+        preview: text.slice(0, 2000)
+      });
+      logger.info("GeminiService", "AGENT_TOKEN_USAGE", {
+        agentName,
         totalTokenCount: usageMetadata.totalTokenCount || null,
         promptTokenCount: usageMetadata.promptTokenCount || null,
         candidatesTokenCount: usageMetadata.candidatesTokenCount || null
@@ -255,6 +265,7 @@ export async function generateContent(systemPrompt, userPrompt, options = {}) {
       const normalizedError = toGeminiError(error);
       logger.error("GeminiService", "API_CALL_FAILED", {
         attempt,
+        agentName,
         error: normalizedError,
         latencyMs: Date.now() - startedAt
       });
@@ -274,7 +285,7 @@ export async function generateContent(systemPrompt, userPrompt, options = {}) {
  * Generates structured JSON in a single model call with local repair/check.
  * @param {string} systemPrompt
  * @param {string} userPrompt
- * @param {{ temperature?: number, maxOutputTokens?: number, checker?: (value: any) => boolean }} [options]
+ * @param {{ temperature?: number, maxOutputTokens?: number, responseMimeType?: string, agentName?: string, checker?: (value: any) => boolean }} [options]
  * @returns {Promise<any>}
  */
 export async function generateStructuredContent(systemPrompt, userPrompt, options = {}) {
