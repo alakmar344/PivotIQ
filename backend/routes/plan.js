@@ -6,6 +6,23 @@ import { handleValidation, planRules, sanitizeText } from "../middleware/validat
 const router = express.Router();
 
 /**
+ * Checks minimal plan payload shape.
+ * @param {any} plan
+ * @returns {boolean}
+ */
+function isPlanValid(plan) {
+  return Boolean(
+    plan
+    && typeof plan === "object"
+    && typeof plan.projectName === "string"
+    && typeof plan.oneLiner === "string"
+    && Array.isArray(plan.weeklyMilestones)
+    && plan.weeklyMilestones.length > 0
+    && Array.isArray(plan.firstActions)
+  );
+}
+
+/**
  * Creates fast fallback plan if precomputed plan is missing.
  * @param {{ idea: string, finalVerdict: any }} payload
  * @returns {any}
@@ -77,6 +94,12 @@ router.post("/", planRules, handleValidation, async (req, res, next) => {
     if (warning) {
       const plan = buildFallbackPlan(payload);
       res.json({ plan, ...warning });
+      return;
+    }
+
+    if (isPlanValid(payload.precomputedPlan)) {
+      logger.info("PlanRoute", "PLAN_REUSED_PRECOMPUTED", { sessionId: payload.sessionId });
+      res.json({ plan: payload.precomputedPlan });
       return;
     }
 

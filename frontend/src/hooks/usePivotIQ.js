@@ -13,6 +13,7 @@ const initialState = {
   debateHistory: [],
   currentAgentResponse: null,
   plan: null,
+  precomputedPlan: null,
   loading: false,
   error: null,
   sessionId: null,
@@ -85,6 +86,7 @@ function reducer(state, action) {
         idea: action.payload.idea,
         researchData: action.payload.researchData,
         verdict: action.payload.verdict,
+        precomputedPlan: action.payload.precomputedPlan || null,
         sessionId: action.payload.sessionId,
         agentActivity: null,
         planReady: action.payload.planReady
@@ -92,7 +94,7 @@ function reducer(state, action) {
     case "COUNTER_SUCCESS":
       return {
         ...state,
-        phase: action.payload.planReady ? "planning" : "debating",
+        phase: "debating",
         loading: false,
         error: null,
         currentAgentResponse: action.payload.agentTurn,
@@ -147,10 +149,11 @@ export function usePivotIQ() {
       verdict: state.verdict,
       debateHistory: state.debateHistory,
       plan: state.plan,
+      precomputedPlan: state.precomputedPlan,
       planReady: state.planReady,
       updatedAt: new Date().toISOString()
     };
-  }, [state.sessionId, state.idea, state.phase, state.researchData, state.verdict, state.debateHistory, state.plan, state.planReady]);
+  }, [state.sessionId, state.idea, state.phase, state.researchData, state.verdict, state.debateHistory, state.plan, state.precomputedPlan, state.planReady]);
 
   const snapshotSignature = useMemo(() => {
     if (!currentSnapshot) return "";
@@ -160,6 +163,7 @@ export function usePivotIQ() {
       verdict: currentSnapshot.verdict,
       debateHistory: currentSnapshot.debateHistory,
       plan: currentSnapshot.plan,
+      precomputedPlan: currentSnapshot.precomputedPlan,
       planReady: currentSnapshot.planReady
     });
   }, [currentSnapshot]);
@@ -236,6 +240,7 @@ export function usePivotIQ() {
           idea: cleaned,
           researchData: response.data.researchData,
           verdict: response.data.verdict,
+          precomputedPlan: response.data.precomputedPlan,
           sessionId: response.data.sessionId,
           planReady: response.data.verdict?.verdict === "FEASIBLE"
         }
@@ -332,7 +337,8 @@ export function usePivotIQ() {
         idea: state.idea,
         researchData: state.researchData,
         finalVerdict: state.verdict,
-        debateHistory: state.debateHistory
+        debateHistory: state.debateHistory,
+        precomputedPlan: state.precomputedPlan || state.plan
       });
 
       dispatch({ type: "PLAN_SUCCESS", payload: response.data.plan });
