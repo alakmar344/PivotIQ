@@ -49,7 +49,10 @@ if (trustProxy !== undefined) {
       }
     }
   }
-} else if (process.env.NODE_ENV === "production") {
+} else {
+  // Default to trusting the first upstream proxy when TRUST_PROXY is not
+  // explicitly set. This is correct for hosted environments like Render that
+  // always sit behind a reverse proxy, regardless of NODE_ENV.
   app.set("trust proxy", 1);
 }
 

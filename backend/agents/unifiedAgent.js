@@ -106,10 +106,10 @@ export async function unifiedAgent(idea) {
 Search Results: ${JSON.stringify(slimmedSearch)}`;
 
   const parsed = await generateStructuredContent(systemPrompt, userPrompt, {
-  temperature: 0.35,
-  maxOutputTokens: 1200,
-  checker: isUnifiedPayloadValid
-});
+    temperature: 0.35,
+    maxOutputTokens: 4096,
+    checker: isUnifiedPayloadValid
+  });
 
 const response = {
   researchData: {
