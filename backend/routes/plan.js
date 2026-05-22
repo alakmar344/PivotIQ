@@ -1,4 +1,5 @@
 import express from "express";
+import { planAgent } from "../agents/planAgent.js";
 import { logger } from "../utils/logger.js";
 import { handleValidation, planRules, sanitizeText } from "../middleware/validator.js";
 
@@ -78,8 +79,19 @@ router.post("/", planRules, handleValidation, async (req, res, next) => {
       verdict
     });
 
-    const precomputed = payload.researchData?.precomputedPlan;
-    const plan = precomputed && typeof precomputed === "object" ? precomputed : buildFallbackPlan(payload);
+    let plan;
+    try {
+      const generated = await planAgent({
+        idea: payload.idea,
+        researchData: payload.researchData,
+        finalVerdict: payload.finalVerdict,
+        debateHistory: payload.debateHistory
+      });
+      plan = generated && typeof generated === "object" ? generated : buildFallbackPlan(payload);
+    } catch (_error) {
+      logger.warn("PlanRoute", "PLAN_AGENT_FAILED_FALLBACK", { sessionId: payload.sessionId });
+      plan = buildFallbackPlan(payload);
+    }
     res.json({ plan });
   } catch (error) {
     next(error);
