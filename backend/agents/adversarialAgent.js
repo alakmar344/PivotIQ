@@ -83,7 +83,7 @@ Your job:
 
 Respond with:
 - responseType: "challenged" | "acknowledged" | "verdict_updated" | "plan_ready"
-- agentResponse: your direct counter or acknowledgment (plain English, 90-180 words)
+- agentResponse: your direct counter or acknowledgment (plain English, 150-220 words)
 - updatedVerdict: updated verdict object using schema
   { feasibilityScore, verdict, pros: string[], cons: string[], summary, keyRisk, keyStrength }
   or null if unchanged
@@ -95,7 +95,7 @@ Return ONLY valid JSON. No markdown. No backticks.`;
 
     const userPrompt = `Idea: ${idea}\nCurrent Verdict: ${JSON.stringify(currentVerdict)}\nResearch Data: ${JSON.stringify(researchData)}\nDebate History (max 6): ${JSON.stringify(recentHistory)}\nUser Counter: ${userCounter}\nUpdated Search Results: ${JSON.stringify(updatedSearchResults)}`;
 
-    const output = await generateContent(systemPrompt, userPrompt, { temperature: 0.5, maxOutputTokens: 2500 });
+    const output = await generateContent(systemPrompt, userPrompt, { temperature: 0.45, maxOutputTokens: 1600 });
     const parsed = parseJson(output);
 
     logger.agent("AdversarialAgent", "COMPLETE", {

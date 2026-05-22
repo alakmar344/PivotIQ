@@ -11,14 +11,22 @@ const router = express.Router();
  * @returns {boolean}
  */
 function isPlanValid(plan) {
+  const hasText = (value) => typeof value === "string" && value.trim().length > 0;
+  const hasTextArray = (value) => Array.isArray(value) && value.length > 0 && value.every(hasText);
   return Boolean(
     plan
     && typeof plan === "object"
-    && typeof plan.projectName === "string"
-    && typeof plan.oneLiner === "string"
+    && hasText(plan.projectName)
+    && hasText(plan.oneLiner)
     && Array.isArray(plan.weeklyMilestones)
     && plan.weeklyMilestones.length > 0
-    && Array.isArray(plan.firstActions)
+    && plan.weeklyMilestones.every((milestone) => milestone
+      && typeof milestone === "object"
+      && Number.isInteger(milestone.week)
+      && hasText(milestone.title)
+      && hasTextArray(milestone.tasks)
+      && hasText(milestone.deliverable))
+    && hasTextArray(plan.firstActions)
   );
 }
 
