@@ -114,6 +114,7 @@ Update `backend/.env` with:
 | `GEMINI_API_KEY` | Yes | Gemini API key |
 | `SERPER_API_KEY` | Yes | Serper API key |
 | `FRONTEND_URL` | Yes | Allowed frontend origin for CORS |
+| `TRUST_PROXY` | No | Proxy hop count (use `1` on Render/Railway) for accurate rate limiting |
 | `LOG_LEVEL` | No | Logger verbosity |
 
 Frontend environment:
