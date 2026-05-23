@@ -103,7 +103,7 @@ In short: **fewer blind bets, smarter launches.**
 - Input validation, timeout handling, rate limiting, and centralized error handling
 
 ### AI architecture highlights
-- Unified agent orchestration to generate research, verdict, debate guide, and plan payloads
+- Dedicated research, analysis, adversarial, and planning agent flow
 - Gemini model baseline: `gemini-3.5-flash`
 - Schema-checked structured output pipeline
 - Deterministic debate and planning gates for reliability
@@ -112,14 +112,20 @@ In short: **fewer blind bets, smarter launches.**
 
 ## API capabilities
 
-### `POST /api/validate`
-Accepts a founder idea and returns market research, verdict, debate guide, and session initialization data.
+### `POST /api/research`
+Accepts a founder idea and returns market/competitor research plus session initialization data.
+
+### `POST /api/analyze`
+Accepts the founder idea + research payload and returns feasibility verdicting data.
 
 ### `POST /api/counter`
 Accepts founder counter-arguments and continues adversarial debate with readiness signaling.
 
 ### `POST /api/plan`
 Returns structured execution planning when idea readiness criteria are met.
+
+### `POST /api/validate`
+Backward-compatible combined endpoint that runs research + analysis in sequence.
 
 ### `GET /api/ping/stream`
 Server-sent keep-alive stream for stable frontend-backend connectivity behavior.

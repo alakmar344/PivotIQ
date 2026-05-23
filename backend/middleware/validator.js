@@ -65,6 +65,20 @@ export const validateIdeaRules = [
 ];
 
 /**
+ * Validation rules for analyze endpoint.
+ */
+export const analysisRules = [
+  body("sessionId").exists().isString().withMessage("sessionId is required"),
+  body("idea")
+    .exists()
+    .isString()
+    .customSanitizer((value) => sanitizeText(value))
+    .isLength({ min: 20, max: 1000 })
+    .withMessage("idea must be between 20 and 1000 characters"),
+  body("researchData").exists().isObject().withMessage("researchData is required")
+];
+
+/**
  * Validation rules for counter endpoint.
  */
 export const counterRules = [
