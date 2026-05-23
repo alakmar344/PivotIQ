@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import validateRoute from "./routes/validate.js";
+import researchRoute from "./routes/research.js";
+import analyzeRoute from "./routes/analyze.js";
 import counterRoute from "./routes/counter.js";
 import planRoute from "./routes/plan.js";
 import { pingConnectionMiddleware } from "./middleware/pingConnection.js";
@@ -106,6 +108,8 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/validate", validateRoute);
+app.use("/api/research", researchRoute);
+app.use("/api/analyze", analyzeRoute);
 app.use("/api/counter", counterRoute);
 app.use("/api/plan", planRoute);
 

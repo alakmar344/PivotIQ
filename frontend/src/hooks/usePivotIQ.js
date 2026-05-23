@@ -233,23 +233,34 @@ export function usePivotIQ() {
         payload: { loading: true, phase: "researching", agentActivity: "Researching market and competitors..." }
       });
       console.log("[PivotIQ] Submitting idea:", cleaned.substring(0, 50));
-      const response = await api.post("/api/validate", { idea: cleaned });
+      const researchResponse = await api.post("/api/research", { idea: cleaned });
+
+      dispatch({
+        type: "SET_LOADING",
+        payload: { loading: true, phase: "analyzing", agentActivity: "Scoring feasibility and strategic risk..." }
+      });
+
+      const analysisResponse = await api.post("/api/analyze", {
+        sessionId: researchResponse.data.sessionId,
+        idea: cleaned,
+        researchData: researchResponse.data.researchData
+      });
 
       dispatch({
         type: "IDEA_SUCCESS",
         payload: {
           idea: cleaned,
-          researchData: response.data.researchData,
-          verdict: response.data.verdict,
-          precomputedPlan: response.data.precomputedPlan,
-          sessionId: response.data.sessionId,
-          planReady: response.data.verdict?.verdict === "FEASIBLE"
+          researchData: researchResponse.data.researchData,
+          verdict: analysisResponse.data.verdict,
+          precomputedPlan: null,
+          sessionId: researchResponse.data.sessionId,
+          planReady: analysisResponse.data.planReady
         }
       });
 
       console.log("[PivotIQ] Verdict received:", {
-        score: response.data.verdict?.feasibilityScore,
-        verdict: response.data.verdict?.verdict
+        score: analysisResponse.data.verdict?.feasibilityScore,
+        verdict: analysisResponse.data.verdict?.verdict
       });
       console.log("[PivotIQ Hook] action complete", { action: "submitIdea" });
     } catch (error) {
