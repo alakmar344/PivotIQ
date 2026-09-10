@@ -1,5 +1,9 @@
 # PivotIQ
 
+[![Live](https://img.shields.io/badge/live-pivot--iq.vercel.app-brightgreen?style=for-the-badge)](https://pivot-iq.vercel.app)
+
+**→ Try it live: [pivot-iq.vercel.app](https://pivot-iq.vercel.app)** — one of the eSAMz Worlds from [esamz.me](https://esamz.me).
+
 ## Startup conviction, pressure-tested.
 
 **PivotIQ is the AI cofounder built to stress-test startup ideas before founders invest time, money, and team bandwidth in the wrong direction.**
